@@ -108,7 +108,7 @@ review_rubric:
     label: Workflow readiness
     label_zh: 工作流沉淀潜力
     scoring: observation_only
-    display_to_user: true
+    display_to_user: false
     store_as_metadata: true
     include_in_total_score: false
     display_section_zh: 扩展观察：这个 Prompt 是否适合沉淀成工作流节点？
@@ -119,15 +119,16 @@ review_rubric:
     - 是否有稳定输入、稳定步骤、稳定输出？
     - 是否适合后续变成 Workflow 的一个节点？
   review_output_format:
-  - total_score
-  - dimension_scores
-  - strengths
-  - weaknesses
-  - detected_failure_patterns
-  - revision_advice
-  - retry_focus
-  - save_readiness
-  - workflow_readiness_note
+    learner_feedback:
+    - strengths_with_evidence
+    - focus_repairs
+    - replacement_skeleton
+    - next_action
+    internal_evaluation:
+    - total_score
+    - dimension_scores
+    - detected_failure_patterns
+    - save_readiness
   score_bands:
   - range: 90-100
     label: Excellent
@@ -164,7 +165,7 @@ review_rubric:
       total_score_formula: sum(weighted_dimension_scores)
     round_2:
       name: retry_attempt
-      mandatory: true
+      mandatory: false
       user_required_fields:
       - revised_task_type_selection
       - revised_missing_information_list
@@ -181,12 +182,11 @@ review_rubric:
       - prompt_executability
       total_score_formula: sum(weighted_dimension_scores)
     final_score_after_retry:
-      source: round_2.total_score
-      rule: Re-score all 8 rubric dimensions using the Round 2 submission. Do not
-        average Round 1 and Round 2. Do not score only the edited dimensions.
+      source: round_2.total_score_or_round_1.total_score
+      rule: Use Round 2 when the learner chooses a retry; otherwise use the usable Round 1 score.
     score_delta:
       formula: round_2.total_score - round_1.total_score
-      display_to_user: true
+      display_to_user: false
       include_in_pass_rule: false
   round_2_evidence_priority:
     task_type_diagnosis:

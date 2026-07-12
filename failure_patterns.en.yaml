@@ -28,7 +28,11 @@ failure_patterns:
   label_zh: 输入材料缺失
   severity: high
   applies_to:
-  - all
+  - extraction_task
+  - comparison_task
+  - evaluation_task
+  - rewriting_task
+  - multistep_task
   trigger: The prompt does not specify source material or information basis.
   feedback_zh: 你没有说明 AI 基于什么资料工作，这会让 WorkBuddy 依赖泛化知识或自行假设事实。
   repair_action_zh: 补充输入材料，例如文档、网页、表格、会议记录、客户访谈、竞品页面或内部资料。

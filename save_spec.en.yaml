@@ -7,7 +7,7 @@ save_spec:
   asset_title_rule_zh: 可执行任务 Prompt 模板 — [任务类型]
   save_condition:
   - final_score_after_retry >= 75
-  - retry_completed == true
+  - round_1_usable_or_retry_completed == true
   - transfer_check_completed == true
   - required_components_present == true
   - no_high_severity_failure_patterns == true

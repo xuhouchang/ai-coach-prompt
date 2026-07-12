@@ -1,18 +1,18 @@
 ---
 retry_policy:
-  type: mandatory_learning_retry
+  type: conditional_learning_retry
   max_rounds: 2
-  min_rounds: 2
+  min_rounds: 1
   round_1_score_rules:
   - condition: total_score >= 90
-    retry_mode: template_optimization
-    localized_instruction_zh: 你的第一版已经很完整。第二轮不是修错，而是把它压缩成更稳定、可复用的 Prompt 模板。请保留任务、输入、背景、输出、验收五个要素，同时让表达更适合下次复用。
+    retry_mode: optional_template_optimization
+    localized_instruction_zh: 这版已经可用。你可以直接进入迁移练习或完成；如果想继续打磨，再把它压缩成可复用模板。
   - condition: total_score >= 75 and total_score < 90
     retry_mode: targeted_improvement
     localized_instruction_zh: 你的第一版已经基本可执行。第二轮请修复系统指出的 1-2 个关键缺口，让 WorkBuddy 少猜一步。
   - condition: total_score < 75
     retry_mode: repair_retry
-    localized_instruction_zh: 你的第一版还需要 WorkBuddy 猜测关键变量。第二轮请优先修复高严重度错误模式。
+    localized_instruction_zh: 你的第一版还需要 WorkBuddy 猜测关键变量。请先修复上面最关键的 1-2 处，再提交下一版。
 retry_focus_selection:
   priority_order:
   - missing_source_material

@@ -33,7 +33,7 @@ test_cases:
       结果应控制在 800 字以内，能直接用于产品团队讨论下一版功能优先级。
     expected_failure_patterns: []
     expected_score_range: 90-100
-    expected_retry_mode: template_optimization
+    expected_retry_mode: optional_template_optimization
   - id: case_generation_good_01
     scenario_id: generation_client_followup
     user_answer_zh: |

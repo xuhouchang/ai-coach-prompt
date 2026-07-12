@@ -31,13 +31,13 @@ retry_cases:
       - revised_missing_information_list
       - final_rewritten_prompt
       - revision_note
-  - id: retry_template_optimization_01
+  - id: retry_optional_template_optimization_01
     round_1_total_score: 94
     detected_failure_patterns: []
-    expected_retry_mode: template_optimization
+    expected_retry_mode: optional_template_optimization
     expected_instruction_contains_zh:
-      - 第二轮不是修错
-      - 压缩成更稳定、可复用的 Prompt 模板
+      - 这版已经可用
+      - 直接进入迁移练习或完成
     expected_required_round_2_fields:
       - revised_task_type_selection
       - revised_missing_information_list

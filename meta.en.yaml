@@ -7,7 +7,7 @@ skill_display_name_zh: AI_coach_prompt
 module_id: module_prompt
 module_name: Prompt Training
 level: L1
-version: 0.7
+version: 0.8
 status: implemented
 canonical_language: en
 primary_locale: zh-CN
@@ -75,8 +75,8 @@ experience_modules:
   module_file: modules/module3_upgrade_judgment.en.yaml
 pass_rule:
   min_base_score_after_retry: 75
-  min_rounds: 2
-  retry_policy: mandatory_learning_retry
+  min_rounds: 1
+  retry_policy: conditional_learning_retry
   require_transfer_check: true
   require_save: true
 localized_assets:

@@ -62,7 +62,7 @@ state_flow_cases:
           不要展开行业背景，不要写成市场研究报告。
           结果应控制在 800 字以内，能直接用于产品团队讨论下一版功能优先级。
         expected_score_range: 90-100
-        expected_retry_mode: template_optimization
+        expected_retry_mode: optional_template_optimization
       - state: practice_rewrite_round_2
         user_answer_zh: |
           修订任务类型：对比型任务，次任务类型为评估型任务。
