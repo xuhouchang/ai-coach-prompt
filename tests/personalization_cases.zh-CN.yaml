@@ -1,0 +1,11 @@
+personalization_cases:
+  - id: personalize_returning_learner_01
+    profile:
+      name: 徐老师
+      industry: 金融/保险
+      prior_sessions: 3
+  - id: personalize_new_learner_02
+    profile:
+      name: 李雷
+      industry: 电商/零售
+      prior_sessions: 0

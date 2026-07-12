@@ -1,0 +1,94 @@
+---
+skill_id: ai-coach-prompt
+skill_name: ai-coach-prompt
+skill_name_zh: AI_coach_prompt
+skill_display_name: AI_coach_prompt
+skill_display_name_zh: AI_coach_prompt
+module_id: module_prompt
+module_name: Prompt Training
+level: L1
+version: 0.6
+status: implemented
+canonical_language: en
+primary_locale: zh-CN
+delivery_language: zh-CN
+estimated_time: 12-18min
+prerequisites: []
+primary_task_type: rewriting_task
+supported_task_types:
+- extraction_task
+- comparison_task
+- evaluation_task
+- generation_task
+- rewriting_task
+- multistep_task
+external_task_type_mapping:
+  transformation_task: rewriting_task
+  multi_stage_task: multistep_task
+learning_mode: guided_training_unit
+course_family_id: ai-coach-prompt
+course_family_display_name: AI_coach_prompt
+rounds:
+- round_1
+- round_2
+- transfer_check
+target_ability:
+- task_type_diagnosis
+- missing_information_diagnosis
+- task_clarity
+- input_definition
+- context_completion
+- output_contract
+- acceptance_criteria
+- prompt_executability
+experience_modules:
+- id: module0_myth_detector
+  label: Prompt Myth Detector
+  label_zh: Prompt 玄学检测器
+  scored: false
+  estimated_time_minutes: 5
+  locale_file: locales/zh-CN/myth_detector.md
+  module_file: modules/module0_myth_detector.en.yaml
+- id: module1_xray
+  label: Prompt X-Ray
+  label_zh: Prompt 可执行性扫描
+  scored: false
+  estimated_time_minutes: 3
+  optional: true
+  locale_file: locales/zh-CN/xray.md
+  module_file: modules/module1_xray.en.yaml
+- id: module2_crash_test
+  label: Prompt Crash Test
+  label_zh: Prompt 压力测试
+  scored: false
+  estimated_time_minutes: 3
+  optional: true
+  locale_file: locales/zh-CN/crash_test.md
+  module_file: modules/module2_crash_test.en.yaml
+- id: module3_upgrade_judgment
+  label: Prompt → Workflow Judgment
+  label_zh: 任务升级判断
+  scored: false
+  estimated_time_minutes: 2
+  event_driven: true
+  locale_file: locales/zh-CN/upgrade_judgment.md
+  module_file: modules/module3_upgrade_judgment.en.yaml
+pass_rule:
+  min_base_score_after_retry: 75
+  min_rounds: 2
+  retry_policy: mandatory_learning_retry
+  require_transfer_check: true
+  require_save: true
+localized_assets:
+- locales/zh-CN/cognition.md
+- locales/zh-CN/read.md
+- locales/zh-CN/exercise.yaml
+- locales/zh-CN/feedback_templates.md
+- locales/zh-CN/glossary.yaml
+- locales/zh-CN/save_template.md
+- locales/zh-CN/next_step.md
+- locales/zh-CN/myth_detector.md
+- locales/zh-CN/xray.md
+- locales/zh-CN/xray_widget.html
+- locales/zh-CN/crash_test.md
+- locales/zh-CN/upgrade_judgment.md

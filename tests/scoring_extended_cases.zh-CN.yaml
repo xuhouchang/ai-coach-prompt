@@ -1,0 +1,117 @@
+scoring_extended_cases:
+  - id: score_extraction_bad_01
+    scenario_id: extraction_meeting_notes
+    user_answer_zh: |
+      这是生成型任务。帮我整理会议纪要，内容清楚一点。
+    expected_failure_patterns:
+      - wrong_task_type
+      - missing_source_material
+      - missing_task_specific_variables
+      - missing_output_contract
+      - missing_acceptance_criteria
+    expected_score_range: 25-45
+
+  - id: score_extraction_good_01
+    scenario_id: extraction_meeting_notes
+    user_answer_zh: |
+      主任务类型：抽取型任务。
+      缺失信息：会议记录、抽取字段、输出结构、负责人和截止时间字段、准确性边界。
+      改写后的 Prompt：
+      请基于我提供的产品评审会转写文本，整理一份结构化会议纪要。
+      请用表格输出：议题、已达成结论、待办事项、负责人、截止时间、未决风险。
+      如果某个议题没有明确结论，请标注“待定”；如果负责人或截止时间未在原文中出现，请标注“原文未明确”。
+      不要自行补充会议中没有出现的信息。
+      结果需要能直接发给参会人用于跟进项目推进。
+    expected_failure_patterns: []
+    expected_score_range: 90-100
+
+  - id: score_transformation_bad_01
+    scenario_id: transformation_sales_copy
+    user_answer_zh: |
+      这是生成型任务。帮我把技术介绍改得更好，更适合客户。
+    expected_failure_patterns:
+      - wrong_task_type
+      - missing_task_object
+      - missing_source_material
+      - missing_task_specific_variables
+      - missing_audience_or_use_case
+      - missing_output_contract
+      - missing_acceptance_criteria
+    expected_score_range: 20-45
+
+  - id: score_transformation_good_01
+    scenario_id: transformation_sales_copy
+    user_answer_zh: |
+      主任务类型：改写型任务。
+      缺失信息：原文、目标客户、改写目标、保留规则、删改规则、输出格式。
+      改写后的 Prompt：
+      请将我提供的 500 字内部技术说明改写成客户可读的售前介绍。
+      目标读者是佳能客户的采购负责人，对方不是技术背景。
+      请保留“私有化部署”和“数据不出域”两个核心卖点，删除模型参数量、框架名称、内部接口细节。
+      输出为 200 字以内的一段话，语言专业、清楚，不使用未解释的技术术语。
+      结果需要让客户读完能复述出两个核心价值点，并适合直接放入售前邮件。
+    expected_failure_patterns: []
+    expected_score_range: 90-100
+
+  - id: score_evaluation_good_01
+    scenario_id: evaluation_sales_proposal
+    user_answer_zh: |
+      主任务类型：评估型任务。
+      缺失信息：评估对象、评估标准、目标客户背景、风险边界、评分规则、建议格式。
+      改写后的 Prompt：
+      请基于我提供的客户方案 V2 草稿，评估它是否适合直接发送给康嘉客户。
+      客户是制造业客户，重点关注落地节奏、成本和风险说明。
+      请从需求覆盖度、方案可行性、报价合理性、风险说明完整性四个维度评分，每项 1-5 分，并说明具体问题。
+      输出为评分表 + 总建议。总建议只能是“直接发送 / 修改后发送 / 不建议发送”三选一。
+      如果建议修改后发送，请列出最优先修改的 3 个点。
+      结果需要支持项目负责人判断是否进入下一轮客户沟通。
+    expected_failure_patterns: []
+    expected_score_range: 90-100
+
+  - id: score_multistage_bad_01
+    scenario_id: multi_stage_market_research
+    user_answer_zh: |
+      这是分析型任务。帮我调研市场，然后给我建议，要全面一些。
+    expected_failure_patterns:
+      - missing_source_material
+      - missing_task_specific_variables
+      - missing_output_contract
+      - missing_acceptance_criteria
+      - overexpanded_without_structure
+    expected_score_range: 30-55
+
+  - id: score_multistage_good_01
+    scenario_id: multi_stage_market_research
+    user_answer_zh: |
+      主任务类型：多步骤任务，包含抽取、对比、评估和建议生成。
+      缺失信息：调研范围、资料来源、分析步骤、评估标准、中间产出、最终建议格式。
+      改写后的 Prompt：
+      请基于我提供的行业报告、竞品官网和用户访谈摘要，判断【目标市场】是否值得进入。
+      请按四步处理：第一步提取市场规模、增长信号、用户痛点、主要玩家；第二步对比 3 个竞品的定位、价格、渠道；第三步按进入难度、潜在收益、资源匹配度、风险四个维度评分；第四步给出进入 / 暂缓 / 放弃的建议。
+      输出为一页决策备忘录，包含关键事实表、竞品对比表、评分表和 3 条下一步验证动作。
+      不要引用未提供材料之外的具体数字；不确定处标注“需补充验证”。
+      结果需要支持创始团队判断是否投入 2 周做进一步验证。
+    expected_failure_patterns: []
+    expected_score_range: 90-100
+
+  - id: score_long_but_unstructured_01
+    scenario_id: comparison_competitor_analysis
+    user_answer_zh: |
+      帮我写一份非常完整的竞品分析，要包括行业背景、用户画像、功能、价格、优劣势、未来趋势、我们的机会和风险。越全面越好，可以多写一点，最好能让老板看了觉得专业。
+    expected_failure_patterns:
+      - missing_task_object
+      - missing_source_material
+      - missing_acceptance_criteria
+      - overexpanded_without_structure
+    expected_score_range: 35-60
+
+  - id: score_conflicting_prompt_01
+    scenario_id: generation_client_followup
+    user_answer_zh: |
+      请写一封客户跟进邮件，语气要非常正式但也要像朋友聊天一样轻松。邮件越详细越好，但必须 100 字以内。不要提下一步行动，但要推动客户约下次会议。
+    expected_failure_patterns:
+      - missing_source_material
+      - missing_task_specific_variables
+    expected_additional_issue_contains:
+      - 指令冲突
+    expected_score_range: 40-65

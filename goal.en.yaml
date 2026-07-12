@@ -1,0 +1,22 @@
+---
+goal:
+  user_can_do_after_finish:
+  - Identify the dominant task type behind a vague business request.
+  - Diagnose missing task variables before writing a prompt.
+  - Rewrite a one-line vague request into an executable AI task prompt.
+  - Add minimum task, input, context, output, and acceptance criteria.
+  - Complete a second revision round based on structured feedback.
+  - Pass a transfer check on a different vague request type.
+  - Save the final prompt as a reusable template.
+  user_should_understand:
+  - A prompt is a task specification.
+  - A vague business request should be diagnosed before it is rewritten.
+  - Prompt quality is determined by reduced guessing, not by length or politeness.
+  - Different task types require different missing variables.
+  - Good prompt design prepares the task for future workflow reuse.
+  common_failure_to_fix:
+  - The user expands the vague request but does not define the task.
+  - The user specifies output format but omits input material.
+  - The user adds context but omits acceptance criteria.
+  - The user misclassifies a comparison or evaluation task as generic generation.
+  - The user writes a long prompt with no structured output contract.

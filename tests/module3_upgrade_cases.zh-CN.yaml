@@ -1,0 +1,82 @@
+---
+test_suite: module3_upgrade_cases
+description: |
+  Test cases for Module 3 — Prompt → Workflow Judgment.
+  Validates 4 boundary signal detection, evolution chain routing,
+  and learning path recommendations.
+canonical_language: en
+primary_locale: zh-CN
+test_cases:
+  - id: upgrade_001
+    description: 多步骤任务 → 触发 multi_step
+    input_task: "先收集所有销售数据，然后计算每个区域的增长率，最后生成一份对比报告。"
+    expected_signals:
+      - multi_step
+    expected_route: skill_workflow_l1_node_design
+    expected_tier: workflow
+
+  - id: upgrade_002
+    description: 外部数据依赖 → 触发 external_data
+    input_task: "帮我查一下最新的特斯拉股价，对比一下过去一个月的变化趋势。"
+    expected_signals:
+      - external_data
+    expected_route: skill_mcp_l1_basics
+    expected_tier: skill
+
+  - id: upgrade_003
+    description: 状态保存需求 → 触发 state_persistence
+    input_task: "帮我记住这次会议的要点，下周继续讨论的时候提醒我。"
+    expected_signals:
+      - state_persistence
+    expected_route: skill_agent_l1_basics
+    expected_tier: agent
+
+  - id: upgrade_004
+    description: 多角色协作 → 触发 multi_role
+    input_task: "让 A 先写初稿，然后 B 审核，最后我来终审。需要审批流程。"
+    expected_signals:
+      - multi_role
+    expected_route: skill_agent_l1_basics
+    expected_tier: agent
+
+  - id: upgrade_005
+    description: 多信号触发 → 按优先级路由
+    input_task: "先用苏格拉底法问 5 个问题收集需求，然后根据需求写方案，写完后发给客户。整个过程你可以用工具查资料。"
+    expected_signals:
+      - multi_step
+      - external_data
+    expected_routes:
+      - skill_workflow_l1_node_design
+      - skill_mcp_l1_basics
+
+  - id: upgrade_006
+    description: 普通单步骤 Prompt → 不触发任何信号
+    input_task: "帮我写一封感谢邮件给客户。"
+    expected_no_signals: true
+
+  - id: upgrade_007
+    description: 仅评估任务 → 不触发升级
+    input_task: "根据附件中的评分标准，给这三份简历打分。"
+    expected_no_signals: true
+
+  - id: upgrade_008
+    description: 外部数据 + 状态保存 → 双信号
+    input_task: "查一下今天的汇率，记录下来，明天继续对比。"
+    expected_signals:
+      - external_data
+      - state_persistence
+
+  - id: upgrade_009
+    description: 演化链展示完整性——所有 failed signals 都应展示
+    input_task: "先查最新的竞品数据，分析后写一份报告，发给各部门审批，审批完了记住结论。"
+    expected_signals:
+      - multi_step
+      - external_data
+      - multi_role
+      - state_persistence
+    # 全部 4 个信号都应触发
+
+  - id: upgrade_010
+    description: 非升级任务不应被误判——对话式需求
+    input_task: "跟我聊聊这个项目的背景。"
+    expected_no_signals: true

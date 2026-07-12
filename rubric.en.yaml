@@ -1,0 +1,206 @@
+---
+review_rubric:
+  scoring_policy_reference: framework/scoring_policy.en.md
+  canonical_mapping_note:
+    transformation_task: rewriting_task
+    multi_stage_task: multistep_task
+  base_dimensions:
+  - id: task_type_diagnosis
+    label: Task type diagnosis
+    label_zh: 任务类型判断
+    weight: 10
+    description: The user correctly identifies the dominant task type and relevant
+      secondary task type.
+    high_score_criteria_zh: 能判断主任务类型，并能解释为什么不是简单套用某个动词。
+    low_score_signals_zh:
+    - 只根据表面动词判断任务类型。
+    - 没有说明判断理由。
+    evidence_required:
+    - task_type_selection
+    - reason_for_dominant_type
+    - secondary_task_type_when_relevant
+  - id: missing_information_diagnosis
+    label: Missing information diagnosis
+    label_zh: 缺失信息诊断
+    weight: 10
+    description: The user identifies missing variables before rewriting the prompt.
+    high_score_criteria_zh: 能列出和任务类型匹配的关键缺口，不只笼统说「背景不够」。
+    low_score_signals_zh:
+    - 只列出 1-2 个表层缺口。
+    - 缺口和任务类型不匹配。
+    evidence_required:
+    - missing_information_list
+  - id: task_clarity
+    label: Task clarity
+    label_zh: 任务目标清晰
+    weight: 12
+    description: The prompt states the concrete action WorkBuddy should perform and
+      the deliverable it should produce.
+    high_score_criteria_zh: 明确说明 WorkBuddy 要完成的动作和最终交付物。
+    low_score_signals_zh:
+    - 仍停留在「帮我分析一下」「帮我看看」。
+    - 没有定义最终交付物。
+    evidence_required:
+    - rewritten_prompt_task_statement
+  - id: input_definition
+    label: Input definition
+    label_zh: 输入材料明确
+    weight: 13
+    description: The prompt specifies what material, source, or user-provided information
+      WorkBuddy should use.
+    high_score_criteria_zh: 明确说明基于哪些资料，或说明资料由用户提供。
+    low_score_signals_zh:
+    - 没有说明信息来源。
+    - 让 WorkBuddy 自行假设事实。
+    evidence_required:
+    - rewritten_prompt_input_section
+  - id: context_completion
+    label: Context completion
+    label_zh: 上下文完整
+    weight: 13
+    description: The prompt states the audience, business use case, and decision context.
+    high_score_criteria_zh: 说明结果给谁看、用于什么场景、要支持什么业务动作。
+    low_score_signals_zh:
+    - 没有读者对象。
+    - 没有业务用途。
+    - 不知道输出深度应该偏管理层、执行层还是客户沟通。
+    evidence_required:
+    - rewritten_prompt_context_section
+  - id: output_contract
+    label: Output contract
+    label_zh: 输出约定明确
+    weight: 15
+    description: The prompt defines the expected output format, structure, length,
+      and deliverable type.
+    high_score_criteria_zh: 明确输出为表格、清单、报告、邮件、评分表等，并给出结构或长度限制。
+    low_score_signals_zh:
+    - 只说「写一份」。
+    - 没有格式、结构或长度要求。
+    evidence_required:
+    - rewritten_prompt_output_section
+  - id: acceptance_criteria
+    label: Acceptance criteria
+    label_zh: 验收标准明确
+    weight: 17
+    description: The prompt defines what makes the output usable for the user's business
+      context.
+    high_score_criteria_zh: 明确说明结果需要支持什么判断、会议、沟通或后续动作。
+    low_score_signals_zh:
+    - 没有说明结果达到什么程度算可用。
+    - 没有定义输出质量边界。
+    evidence_required:
+    - rewritten_prompt_acceptance_section
+  - id: prompt_executability
+    label: Prompt executability
+    label_zh: Prompt 可执行性
+    weight: 10
+    description: WorkBuddy can execute the prompt with minimal follow-up and no major
+      ambiguity.
+    high_score_criteria_zh: WorkBuddy 可以直接产出结果，不需要再追问任务对象、输入材料、格式、用途或验收标准。
+    low_score_signals_zh:
+    - 仍需要追问多个关键变量才能开始。
+    - 指令之间互相冲突。
+    evidence_required:
+    - full_rewritten_prompt
+  total_weight: 100
+  skill_dimensions:
+  - id: workflow_readiness
+    label: Workflow readiness
+    label_zh: 工作流沉淀潜力
+    scoring: observation_only
+    display_to_user: true
+    store_as_metadata: true
+    include_in_total_score: false
+    display_section_zh: 扩展观察：这个 Prompt 是否适合沉淀成工作流节点？
+    description: Checks whether the rewritten prompt could later become part of a
+      reusable workflow or Skill.
+    observation_questions_zh:
+    - 这个 Prompt 是否能被模板化？
+    - 是否有稳定输入、稳定步骤、稳定输出？
+    - 是否适合后续变成 Workflow 的一个节点？
+  review_output_format:
+  - total_score
+  - dimension_scores
+  - strengths
+  - weaknesses
+  - detected_failure_patterns
+  - revision_advice
+  - retry_focus
+  - save_readiness
+  - workflow_readiness_note
+  score_bands:
+  - range: 90-100
+    label: Excellent
+    label_zh: 优秀
+    interpretation_zh: 已经具备清晰的任务建模能力。第二轮重点从修错转为模板化优化。
+  - range: 75-89
+    label: Pass
+    label_zh: 通过
+    interpretation_zh: Prompt 基本可执行，但仍有 1-2 个变量可以继续补强。
+  - range: 60-74
+    label: Partial
+    label_zh: 部分达标
+    interpretation_zh: 已经比原始需求清楚，但仍需要 WorkBuddy 猜测关键变量。
+  - range: 0-59
+    label: Needs retry
+    label_zh: 需要重做
+    interpretation_zh: 仍停留在扩写模糊需求，尚未完成任务建模。
+  round_scoring_protocol:
+    round_1:
+      name: initial_attempt
+      user_required_fields:
+      - task_type_selection
+      - missing_information_list
+      - rewritten_prompt
+      score_dimensions:
+      - task_type_diagnosis
+      - missing_information_diagnosis
+      - task_clarity
+      - input_definition
+      - context_completion
+      - output_contract
+      - acceptance_criteria
+      - prompt_executability
+      total_score_formula: sum(weighted_dimension_scores)
+    round_2:
+      name: retry_attempt
+      mandatory: true
+      user_required_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list
+      - final_rewritten_prompt
+      - revision_note
+      score_dimensions:
+      - task_type_diagnosis
+      - missing_information_diagnosis
+      - task_clarity
+      - input_definition
+      - context_completion
+      - output_contract
+      - acceptance_criteria
+      - prompt_executability
+      total_score_formula: sum(weighted_dimension_scores)
+    final_score_after_retry:
+      source: round_2.total_score
+      rule: Re-score all 8 rubric dimensions using the Round 2 submission. Do not
+        average Round 1 and Round 2. Do not score only the edited dimensions.
+    score_delta:
+      formula: round_2.total_score - round_1.total_score
+      display_to_user: true
+      include_in_pass_rule: false
+  round_2_evidence_priority:
+    task_type_diagnosis:
+      primary_evidence: revised_task_type_selection
+      fallback_allowed: false
+    missing_information_diagnosis:
+      primary_evidence: revised_missing_information_list
+      fallback_allowed: false
+    prompt_quality_dimensions:
+      primary_evidence: final_rewritten_prompt
+      dimensions:
+      - task_clarity
+      - input_definition
+      - context_completion
+      - output_contract
+      - acceptance_criteria
+      - prompt_executability

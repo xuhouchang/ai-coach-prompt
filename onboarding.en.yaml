@@ -1,0 +1,34 @@
+---
+onboarding:
+  purpose: 学前诊断问卷 + 个性化招呼 + 自适应路径的数据与规则来源。本文件只被产品技能读取，不被分发给终端用户（build 时打进安装包，但属于产品技能内部配置）。
+  profile_schema:
+    fields:
+    - name: name
+    - name: industry
+    - name: ai_usage
+    - name: goals
+    - name: scenario_pref
+    - name: level
+    - name: prior_sessions
+    - name: last_scenario_industry
+    - name: updated_at
+    persistence:
+      path: ".workbuddy/memory/learner_profile.yaml"
+      rule: 首次完成 entry_check 后写入；每次训练后更新 level / prior_sessions / last_scenario_industry。
+  personalization:
+    greeting_order:
+    - 若 workspace .workbuddy/memory/learner_profile.yaml 存在：用 name 打招呼，引用 prior_sessions
+      与上次行业/level，说明本次将基于过往继续。
+    - 否则若云端 profile 提供姓名/角色：用其打招呼（若可用）。
+    - 说明学→练→迁移旅程：先诊断模糊需求，再改写成可执行 Prompt，最后做一次迁移检查。
+    - 若 q7 == 贴近我的行业场景 或 industry 已知：告知会优先选用该行业的练习场景。
+    memory_sources:
+    - 云端 profile（长期事实）
+    - 本地 user memory（~/.workbuddy/MEMORY.md 与 USER.md）
+    - 学员档案（workspace .workbuddy/memory/learner_profile.yaml）
+    guardrails:
+    - 不编造用户未提供的行业/业务事实。
+    - 行业未知时用通用场景，不强行假设。
+  adaptive_path:
+    rule: 由 routing.yaml 的 industry_adaptation 决定；所选场景 primary_task_type 必须落在路由 level
+      的 allowed_task_types 内，否则回退到路由场景池。

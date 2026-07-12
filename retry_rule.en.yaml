@@ -1,0 +1,38 @@
+---
+retry_policy:
+  type: mandatory_learning_retry
+  max_rounds: 2
+  min_rounds: 2
+  round_1_score_rules:
+  - condition: total_score >= 90
+    retry_mode: template_optimization
+    localized_instruction_zh: 你的第一版已经很完整。第二轮不是修错，而是把它压缩成更稳定、可复用的 Prompt 模板。请保留任务、输入、背景、输出、验收五个要素，同时让表达更适合下次复用。
+  - condition: total_score >= 75 and total_score < 90
+    retry_mode: targeted_improvement
+    localized_instruction_zh: 你的第一版已经基本可执行。第二轮请修复系统指出的 1-2 个关键缺口，让 WorkBuddy 少猜一步。
+  - condition: total_score < 75
+    retry_mode: repair_retry
+    localized_instruction_zh: 你的第一版还需要 WorkBuddy 猜测关键变量。第二轮请优先修复高严重度错误模式。
+retry_focus_selection:
+  priority_order:
+  - missing_source_material
+  - missing_task_specific_variables
+  - missing_task_object
+  - missing_acceptance_criteria
+  - missing_output_contract
+  - missing_audience_or_use_case
+  - wrong_task_type
+  - overexpanded_without_structure
+  max_focus_items:
+    beginner: 2
+    standard: 2
+    advanced: 3
+round_2_submission_requirements:
+  required_fields:
+  - revised_task_type_selection
+  - revised_missing_information_list
+  - final_rewritten_prompt
+  - revision_note
+  scoring_rule: Round 2 is scored independently. No Round 1 dimension score carries
+    over.
+  incomplete_submission_behavior: ask_for_missing_round_2_fields_before_scoring

@@ -1,0 +1,74 @@
+input_mode_cases:
+  - id: input_direct_task_should_not_trigger_01
+    user_message: 帮我写一份竞品分析。
+    outside_training_context: true
+    expected_behavior:
+      skill_should_trigger: false
+      reason: 用户要任务结果，不是在做 Prompt 改写训练。
+
+  - id: input_training_request_should_trigger_01
+    user_message: 我想练习怎么把“帮我写一份竞品分析”改成更好的 Prompt。
+    outside_training_context: true
+    expected_behavior:
+      skill_should_trigger: true
+      initial_state: entry_check_or_concept_read
+
+  - id: input_vague_answer_inside_practice_01
+    state: practice_rewrite_round_1
+    scenario_id: comparison_competitor_analysis
+    user_answer_zh: 帮我写一份竞品分析，详细一点。
+    expected_behavior:
+      treat_as_practice_submission: true
+      do_not_answer_competitor_analysis: true
+      expected_failure_patterns:
+        - missing_task_object
+        - missing_source_material
+        - missing_task_specific_variables
+        - missing_output_contract
+        - missing_acceptance_criteria
+      expected_score_range: 20-45
+      retry_mode: repair_retry
+
+  - id: input_existing_prompt_score_mode_01
+    user_message: |
+      我已经有一版 Prompt，你直接帮我打分：
+      请基于我提供的三个竞品官网资料，用表格对比功能、价格和卖点，给产品团队开会用。
+    expected_behavior:
+      mode: score_existing_prompt
+      should_require_entry_check: false
+      score_original_user_submission: true
+      expected_missing_may_include:
+        - acceptance_criteria
+      expected_output_contains:
+        - total_score
+        - dimension_scores
+        - revision_advice
+
+  - id: input_direct_rewrite_mode_01
+    user_message: 你别让我练了，直接把“帮我看看这个方案行不行”改成可执行 Prompt。
+    expected_behavior:
+      mode: direct_rewrite
+      training_completion_credit: false
+      should_generate_rewritten_prompt: true
+      should_include_completed_slots: true
+      should_include_assumptions_or_placeholders: true
+      should_not_force_round_2: true
+
+  - id: input_refuses_task_type_01
+    state: practice_rewrite_round_1
+    scenario_id: evaluation_sales_proposal
+    user_message: 我不想判断任务类型，你直接告诉我应该怎么写。
+    expected_behavior:
+      infer_candidate_task_type: evaluation_task
+      ask_for_confirmation_or_proceed_with_label: true
+      do_not_exit_skill: true
+      coaching_style: supportive_but_structured
+
+  - id: input_irrelevant_content_01
+    state: practice_rewrite_round_1
+    scenario_id: generation_client_followup
+    user_message: 今天上海天气怎么样？
+    expected_behavior:
+      detect_off_topic: true
+      response_should_return_to_current_training_state: true
+      should_not_answer_weather: true

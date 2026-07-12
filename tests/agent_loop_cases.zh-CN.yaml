@@ -1,0 +1,123 @@
+agent_loop_policy:
+  purpose: 测试 Skill 在需要内部自检、自我修正时是否能受控地找到更优答案。
+  max_internal_iterations_default: 3
+  expose_chain_of_thought: false
+  allowed_observable_metadata:
+    - loop_iterations
+    - stop_reason
+    - unresolved_blockers
+    - user_question_required
+  core_rules:
+    - scoring_must_use_original_user_submission
+    - rewrite_suggestion_may_be_generated_after_scoring
+    - ask_user_only_when_missing_information_blocks_execution
+    - use_placeholders_when_information_can_be safely deferred
+    - stop_when_score_band_no_longer_improves_or_max_iterations_reached
+
+agent_loop_cases:
+  - id: loop_concept_read_no_loop_01
+    state: concept_read
+    learner_route: standard
+    user_message: 什么是 Prompt？
+    expected_loop_behavior:
+      max_loop_iterations: 1
+      stop_reason: direct_explanation_sufficient
+      user_question_required: false
+    expected_output:
+      concise_concept_read: true
+      no_self_optimization_log: true
+
+  - id: loop_scoring_does_not_rewrite_before_score_01
+    state: practice_rewrite_round_1
+    scenario_id: comparison_competitor_analysis
+    user_answer_zh: |
+      这是对比任务。请基于三个竞品官网资料，对比功能、价格和卖点，用表格输出给产品团队。
+    expected_loop_behavior:
+      score_original_user_submission: true
+      may_generate_revision_advice_after_scoring: true
+      max_loop_iterations: 2
+    expected_scoring:
+      expected_failure_patterns_may_include:
+        - missing_acceptance_criteria
+      expected_score_range: 70-88
+    forbidden:
+      - silently_add_acceptance_criteria_before_scoring
+      - inflate_score_using_model_generated_rewrite
+
+  - id: loop_direct_rewrite_with_placeholders_01
+    user_message: 直接把“帮我写一份竞品分析”改成可执行 Prompt，不要问我太多问题。
+    expected_mode: direct_rewrite
+    expected_loop_behavior:
+      max_loop_iterations: 3
+      user_question_required: false
+      stop_reason: best_effort_template_with_placeholders
+    expected_output:
+      contains_rewritten_prompt: true
+      contains_core_slots:
+        - task
+        - input
+        - context
+        - output
+        - acceptance
+      uses_placeholders_for_unknowns:
+        - 竞品对象
+        - 输入材料
+        - 分析维度
+      contains_assumptions_or_placeholders: true
+    forbidden:
+      - fabricate_competitor_names
+      - fabricate_source_material
+      - ask_more_than_two_questions
+
+  - id: loop_blocking_missing_attachment_01
+    user_message: 请基于我上传的方案，帮我改写成可执行 Prompt。
+    context:
+      attachment_present: false
+    expected_loop_behavior:
+      max_loop_iterations: 1
+      user_question_required: true
+      unresolved_blockers:
+        - missing_source_material
+      stop_reason: blocking_input_missing
+    expected_output:
+      asks_for_missing_material: true
+      may_provide_template_skeleton: true
+    forbidden:
+      - pretend_attachment_exists
+      - evaluate_or_rewrite_specific_document_content
+
+  - id: loop_overasking_control_01
+    user_message: |
+      直接帮我把这句话改好：帮我看看这个方案行不行。
+      可以用占位符，不要连续问我一堆问题。
+    expected_mode: direct_rewrite
+    expected_loop_behavior:
+      max_loop_iterations: 3
+      user_question_required: false
+      stop_reason: placeholder_template_sufficient
+    expected_output:
+      contains_placeholders:
+        - 方案材料
+        - 评估维度
+        - 目标客户背景
+        - 输出格式
+      max_questions_to_user: 0
+
+  - id: loop_no_infinite_retry_01
+    state: practice_rewrite_round_2
+    scenario_id: extraction_meeting_notes
+    user_answer_zh: |
+      修订任务类型：抽取型任务。
+      修订缺失信息：会议记录、抽取字段、输出结构、负责人、截止时间、准确性边界。
+      最终 Prompt：请基于我提供的会议记录，整理表格，包含议题、结论、负责人、截止时间和风险。没有出现的信息标注“原文未明确”。结果用于项目跟进。
+      修改说明：补充了字段和准确性边界。
+    expected_loop_behavior:
+      max_loop_iterations: 2
+      stop_reason_one_of:
+        - score_band_stable
+        - max_quality_reached_for_submission
+      user_question_required: false
+    expected_final_score_range: 85-96
+    forbidden:
+      - request_third_retry
+      - expose_internal_reasoning_trace

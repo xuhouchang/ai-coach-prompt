@@ -1,0 +1,44 @@
+save_condition_cases:
+  - id: save_pass_01
+    final_score_after_retry: 82
+    retry_completed: true
+    transfer_check_completed: true
+    component_scores:
+      task_clarity_score: 9
+      input_definition_score: 9
+      context_completion_score: 9
+      output_contract_score: 11
+      acceptance_criteria_score: 12
+      prompt_executability_score: 7
+    high_severity_failure_patterns: []
+    expected_required_components_present: true
+    expected_save_allowed: true
+  - id: save_fail_missing_input
+    final_score_after_retry: 78
+    retry_completed: true
+    transfer_check_completed: true
+    component_scores:
+      task_clarity_score: 10
+      input_definition_score: 4
+      context_completion_score: 9
+      output_contract_score: 11
+      acceptance_criteria_score: 12
+      prompt_executability_score: 7
+    high_severity_failure_patterns:
+      - missing_source_material
+    expected_required_components_present: false
+    expected_save_allowed: false
+  - id: save_fail_without_transfer
+    final_score_after_retry: 88
+    retry_completed: true
+    transfer_check_completed: false
+    component_scores:
+      task_clarity_score: 10
+      input_definition_score: 11
+      context_completion_score: 11
+      output_contract_score: 12
+      acceptance_criteria_score: 13
+      prompt_executability_score: 8
+    high_severity_failure_patterns: []
+    expected_required_components_present: true
+    expected_save_allowed: false

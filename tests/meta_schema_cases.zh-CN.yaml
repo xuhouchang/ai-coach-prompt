@@ -1,0 +1,50 @@
+meta_schema_cases:
+  - id: schema_rubric_weights_01
+    file: rubric.en.yaml
+    assertions:
+      - review_rubric.total_weight == 100
+      - sum(review_rubric.base_dimensions.weight) == 100
+      - every_base_dimension_has_evidence_required == true
+      - every_base_dimension_has_low_score_signals_zh == true
+
+  - id: schema_scenario_ids_01
+    files:
+      - scenario_bank.en.yaml
+      - routing.en.yaml
+      - tests/*.yaml
+    assertions:
+      - every_primary_scenario_pool_id_exists_in_scenario_bank == true
+      - every_transfer_check_pool_id_exists_in_scenario_bank == true
+      - every_test_scenario_id_exists_in_scenario_bank == true
+
+  - id: schema_failure_pattern_ids_01
+    files:
+      - failure_patterns.en.yaml
+      - tests/*.yaml
+    assertions:
+      - every_expected_failure_pattern_exists == true
+      - every_high_severity_blocker_exists == true
+
+  - id: schema_retry_consistency_01
+    files:
+      - retry_rule.en.yaml
+      - rubric.en.yaml
+    assertions:
+      - retry_policy.max_rounds == 2
+      - retry_policy.min_rounds <= retry_policy.max_rounds
+      - round_2_submission_requirements.required_fields == review_rubric.round_scoring_protocol.round_2.user_required_fields
+      - incomplete_submission_behavior == ask_for_missing_round_2_fields_before_scoring
+
+  - id: schema_locale_required_files_01
+    directory: locales/zh-CN
+    required_files:
+      - read.md
+      - exercise.yaml
+      - feedback_templates.md
+      - glossary.yaml
+      - next_step.md
+      - save_template.md
+    assertions:
+      - all_required_files_exist == true
+      - read_md_contains_core_claim == true
+      - exercise_yaml_contains_round_1_and_round_2_instructions == true

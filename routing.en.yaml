@@ -1,0 +1,99 @@
+---
+routing:
+  purpose: Assign learner level and define route-specific behavior for exercise selection,
+    read depth, feedback style, and retry focus.
+  learner_levels:
+  - level_id: beginner
+    primary_scenario_pool:
+    - generation_client_followup
+    - extraction_meeting_notes
+    transfer_check_pool:
+    - comparison_competitor_analysis
+    allowed_task_types:
+    - extraction_task
+    - generation_task
+    read_depth: detailed
+    feedback_style: more_explanatory
+    retry_scope: fix_one_or_two_failures
+    max_retry_focus_items: 2
+    coaching_style_zh: 先帮学员看清“五个槽位”，避免一次引入过多判断维度。
+  - level_id: standard
+    primary_scenario_pool:
+    - comparison_competitor_analysis
+    - transformation_sales_copy
+    transfer_check_pool:
+    - extraction_meeting_notes
+    - evaluation_sales_proposal
+    allowed_task_types:
+    - comparison_task
+    - rewriting_task
+    read_depth: normal
+    feedback_style: balanced
+    retry_scope: fix_two_failures
+    max_retry_focus_items: 2
+    coaching_style_zh: 让学员同时练任务结构和输出约定，开始要求更完整的可执行性。
+  - level_id: advanced
+    primary_scenario_pool:
+    - evaluation_sales_proposal
+    - multi_stage_market_research
+    transfer_check_pool:
+    - comparison_competitor_analysis
+    - transformation_sales_copy
+    allowed_task_types:
+    - evaluation_task
+    - multistep_task
+    read_depth: concise
+    feedback_style: direct
+    retry_scope: fix_all_high_severity_failures
+    max_retry_focus_items: 3
+    coaching_style_zh: 要求学员把判断标准、步骤顺序和验收标准写清楚，避免“高级但空泛”。
+  fallback_rule:
+    if_level_unknown: standard
+  canonical_mapping_note:
+    transformation_task: rewriting_task
+    multi_stage_task: multistep_task
+  industry_adaptation:
+    description: 在路由确定的 level 与场景池基础上，若学员档案/记忆指示了行业，优先从 scenario_bank 选用匹配行业的场景；所选场景的
+      primary_task_type 必须落在该 level 的 allowed_task_types 内，否则回退到路由场景池。
+    scenario_by_industry:
+      电商/零售:
+      - ecom_review_reply
+      - ecom_promo_compare
+      - ecom_launch_eval
+      金融/保险:
+      - fin_risk_checklist
+      - fin_product_compare
+      - fin_portfolio_eval
+      制造/供应链:
+      - mfg_rootcause_analysis
+      - mfg_supplier_compare
+      - mfg_capacity_eval
+      教育/培训:
+      - edu_microcourse_outline
+      - edu_course_compare
+      - edu_program_eval
+      医疗/健康:
+      - health_faq_gen
+      - health_plan_compare
+      - health_service_eval
+      媒体/内容:
+      - media_topic_plan
+      - media_format_compare
+      - media_strategy_eval
+      互联网/软件:
+      - generation_client_followup
+      - sw_tool_compare
+      - sw_arch_eval
+      通用: []
+    read_depth_nudge:
+      金融/保险: detailed
+      医疗/健康: detailed
+      其他: normal
+  routing_output_fields:
+  - learner_level
+  - read_depth
+  - feedback_style
+  - retry_scope
+  - max_retry_focus_items
+  - primary_scenario_pool
+  - transfer_check_pool

@@ -1,0 +1,87 @@
+---
+test_suite: module2_crash_cases
+description: |
+  Test cases for Module 2 — Prompt Crash Test.
+  Validates PASS/FAIL decisions for 3 stress scenarios and root-cause attribution.
+canonical_language: en
+primary_locale: zh-CN
+test_cases:
+  - id: crash_001
+    description: 全场景稳定 → 整体 PASS
+    input_prompt: |
+      请分析提供的销售数据，输出以下指标：总销售额、环比增长率、Top 5 产品。
+      如果没有提供数据，请先要求我提供，不要自行编造。
+      无论数据量大小（1 条或 1000 条），都按相同结构输出：表头 + 数据行 + 3 条摘要。
+      输出格式为：表格 + 3 条 bullet points。
+    expected_scenarios:
+      missing_info: PASS
+      scale_change: PASS
+      target_change: PASS
+    expected_overall: PASS
+
+  - id: crash_002
+    description: 无兜底也无输入定义 → 缺信息 FAIL
+    input_prompt: "帮我分析一下销售数据，看看有哪些问题。"
+    expected_scenarios:
+      missing_info: FAIL
+    expected_fail_root: input_definition
+
+  - id: crash_003
+    description: 输出格式绑定单一规模 → 规模变化 FAIL
+    input_prompt: "帮我总结一下这条客户反馈，写一段 100 字的话概括。"
+    expected_scenarios:
+      scale_change: FAIL
+    expected_fail_root: output_contract
+
+  - id: crash_004
+    description: 受众写死在指令中 → 目标变化 FAIL
+    input_prompt: "写一封邮件给我的老板，汇报本周项目进展。"
+    expected_scenarios:
+      target_change: FAIL
+    expected_fail_root:
+      - context_completion
+      - acceptance_criteria
+
+  - id: crash_005
+    description: 全面不合格 → 三项全 FAIL
+    input_prompt: "帮我看看这个。"
+    expected_scenarios:
+      missing_info: FAIL
+      scale_change: FAIL
+      target_change: FAIL
+    expected_overall: FAIL
+
+  - id: crash_006
+    description: 有兜底假设 → 缺信息 PASS
+    input_prompt: |
+      分析客户反馈。如果没有提供特定客户名，默认分析所有已知客户。
+      如果没有提供时间范围，默认使用最近 30 天数据。
+    expected_scenarios:
+      missing_info: PASS
+
+  - id: crash_007
+    description: '“逐项”结构 → 规模变化 PASS'
+    input_prompt: |
+      对每一条客户反馈，输出：编号 / 情感倾向(正面/负面/中性) / 核心诉求 / 紧急度(高/中/低)。
+      按以上格式逐条处理所有反馈。
+    expected_scenarios:
+      scale_change: PASS
+
+  - id: crash_008
+    description: 目标参数化 → 目标变化 PASS
+    input_prompt: |
+      生成一份项目进展报告。格式为：标题 / 当前阶段 / 完成百分比 / 风险项 / 下一步。
+      受众：【填写：内部团队 / 客户 / 管理层】，根据受众调整语言风格和技术深度。
+    expected_scenarios:
+      target_change: PASS
+
+  - id: crash_009
+    description: 任意 FAIL 即整体 FAIL
+    input_prompt: |
+      分析销售数据，输出总销售额和同比增长率。
+      必须提供数据，否则无法执行。
+    expected_scenarios:
+      missing_info: FAIL
+      scale_change: PASS
+      target_change: FAIL
+    expected_overall: FAIL

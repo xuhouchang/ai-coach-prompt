@@ -1,0 +1,133 @@
+---
+module:
+  id: module0_myth_detector
+  name: Prompt Myth Detector
+  name_zh: Prompt 玄学检测器
+  purpose_zh: 让学习者粘贴任意 Prompt，识别其中的“玄学”表达，解释为何无法稳定提升结果，并给出可替换的可执行元素，从而建立“Prompt 是任务规格书”的心智。
+  scoring: unscored
+  interaction_mode: interactive
+  max_time_minutes: 5
+  failure_pattern_refs:
+    - F10
+    - F11
+    - F12
+    - F13
+    - F14
+    - F15
+
+# 玄学词表：6 类，覆盖用户指定的全部关键词
+myth_catalog:
+  - id: ritual_breathing
+    name_zh: 仪式呼吸型
+    maps_to_failure_pattern: F10
+    keywords:
+      - 深吸一口气
+      - 深呼吸
+      - take a deep breath
+      - let's think step by step
+      - 请一步一步思考
+    why_no_stable_improvement_zh: |
+      呼吸、分步思考是情绪安抚或流程提示，没有给 AI 任何关于任务对象、输入、输出或验收的实质信息。
+      AI 不会因为这些词“更努力”，只会因为拿到更清楚的指令才变好。
+    replacement_slot: task_clarity
+    replacement_example_zh: |
+      删掉“深吸一口气”，改为规定输出路径：请按“现状 → 冲突 → 结论”三步输出。
+  - id: thinking_instruction
+    name_zh: 思考指令型
+    maps_to_failure_pattern: F10
+    keywords:
+      - 请充分思考
+      - 认真思考
+      - 仔细想想
+      - think hard
+    why_no_stable_improvement_zh: |
+      “充分思考”没有给定思考的范围和截止条件，极易导致 AI 跑题或发散，结果不稳定。
+    replacement_slot: context_completion
+    replacement_example_zh: |
+      删掉“请充分思考”，改为限定边界：请基于本文档前三节评估，不需要发散到行业背景。
+  - id: empty_expert_role
+    name_zh: 空泛角色型
+    maps_to_failure_pattern: F11
+    keywords:
+      - 你是顶级专家
+      - 你是一个资深专家
+      - 你是大师
+      - you are a top expert
+      - act as an expert
+    why_no_stable_improvement_zh: |
+      “顶级专家”是极度主观且空泛的概念。没有定义专家的具体能力边界与输出标准，角色设定形同虚设。
+    replacement_slot: context_completion
+    replacement_example_zh: |
+      删掉“你是顶级专家”，改为具体上下文：这份结果将面向 CTO 汇报，重点呈现 ROI 与技术可行性。
+  - id: incentive_trick
+    name_zh: 利诱型
+    maps_to_failure_pattern: F15
+    keywords:
+      - 给你小费
+      - 请喝咖啡
+      - thank you very much
+      - 我会给你好评
+      - 给你 100 元
+    why_no_stable_improvement_zh: |
+      AI 不会因“小费”或“好评”改变行为。这类诱导词完全不提供任务信息，对结果零影响。
+    replacement_slot: output_contract
+    replacement_example_zh: |
+      删掉“给你小费”，改为规定交付：请用一页备忘录呈现，包含结论、3 条依据和下一步建议。
+  - id: importance_emphasis
+    name_zh: 重要性强调型
+    maps_to_failure_pattern: F14
+    keywords:
+      - 这很重要
+      - 请务必
+      - 这是关键任务
+      - this is very important
+      - 千万
+    why_no_stable_improvement_zh: |
+      强调重要性只是施加情绪压力，没有定义“重要”在结果上意味着什么标准，AI 无法据此收敛输出。
+    replacement_slot: acceptance_criteria
+    replacement_example_zh: |
+      删掉“这很重要”，改为验收标准：结果需要能直接用于周一的立项评审，不需二次整理。
+  - id: fake_logic_framework
+    name_zh: 假逻辑框架型
+    maps_to_failure_pattern: F13
+    keywords:
+      - 第一性原理
+      - 苏格拉底法
+      - 金字塔原理
+      - first principles
+      - socratic method
+    why_no_stable_improvement_zh: |
+      如果不规定框架的具体应用方式，AI 通常只会套一个表面格式，并不会真正深入业务逻辑。
+    replacement_slot: task_clarity
+    replacement_example_zh: |
+      把“用第一性原理”改为具体步骤：先列出 3 个底层假设，再逐一用材料验证，最后说明哪个假设不成立。
+
+# 交互流程
+interaction_spec:
+  input: 学习者粘贴任意 Prompt（或系统提供示例坏 Prompt）。
+  steps:
+    - 逐段扫描输入，命中 myth_catalog 中的关键词。
+    - 对每个命中片段输出：玄学类型 / 为什么无法稳定提升 / 应替换的可执行元素（指向 5 槽位之一）。
+    - 若整段无命中，说明它已经是可执行表达，给予正向反馈。
+  report_template_ref: locales/zh-CN/myth_detector.md
+  cognitive_shock_line_zh: |
+    这些词读起来很专业，但它们没有告诉 AI 任何关于你任务的事实。
+    真正的 Prompt 不是咒语，是规格书。
+
+# 在闭环中的使用（复用现有 myth_diagnosis 状态）
+in_loop_usage:
+  state: myth_diagnosis
+  mandatory: true
+  output_flags:
+    - recognizes_ritual_prompt
+    - recognizes_empty_role_prompt
+    - recognizes_generic_quality_words
+    - recognizes_unexpanded_framework
+    - recognizes_importance_emphasis
+    - recognizes_incentive_trick
+    - can_rewrite_myth_into_structure
+  reuse_in_round_scoring: |
+    在 Round1 评分时，读取上述 flags。若学习者在诊断中未识别某类玄学、却在改写中重复，需在反馈中显式点出以强化概念。
+
+# 独立体验模式
+direct_mode: myth_detect

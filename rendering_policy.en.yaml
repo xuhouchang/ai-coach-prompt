@@ -1,0 +1,29 @@
+---
+rendering_policy:
+  core_slot_framework:
+    semantic_relation: parallel_check_items
+    short_labels_zh:
+    - 做什么
+    - 基于什么
+    - 给谁用
+    - 交付什么
+    - 怎样算好
+    allowed_rendering:
+    - checklist
+    - simple_table
+    - static_cards
+    forbidden_rendering:
+    - arrow_flowchart
+    - causal_chain
+    - sequential_process_diagram
+    - mermaid_flowchart
+    fallback_rendering: markdown_checklist
+    expected_short_label_max_zh_chars: 6
+  learning_state_flow:
+    semantic_relation: sequential_steps
+    allowed_rendering:
+    - text_steps
+    - flowchart
+  concept_read:
+    max_full_business_examples: 1
+    forbid_long_article_style: true

@@ -1,0 +1,189 @@
+---
+state_flow:
+  states:
+  - entry_check
+  - cognition
+  - myth_detect
+  - concept_read
+  - xray_scan
+  - crash_test
+  - guided_diagnosis
+  - practice_rewrite_round_1
+  - scoring_feedback_round_1
+  - practice_rewrite_round_2
+  - transfer_check
+  - upgrade_judgment
+  - completion
+  transitions:
+  - from: entry_check
+    to: cognition
+    condition: learner_route_selected
+  - from: cognition
+    to: myth_detect
+    condition: cognition_completed_or_skipped_with_minimal_recap
+    optional: true
+  - from: myth_detect
+    to: concept_read
+    condition: myth_detect_completed OR learner_declines_myth_detect == true
+  - from: concept_read
+    to: xray_scan
+    condition: concept_read_completed_or_skipped_with_minimal_recap
+    optional: true
+  - from: xray_scan
+    to: crash_test
+    condition: xray_scan_completed
+    optional: true
+  - from: crash_test
+    to: guided_diagnosis
+    condition: crash_test_completed
+    optional: true
+  - from: concept_read
+    to: guided_diagnosis
+    condition: xray_crash_skipped
+  - from: guided_diagnosis
+    to: practice_rewrite_round_1
+    condition: guided_diagnosis_completed
+  - from: practice_rewrite_round_1
+    to: scoring_feedback_round_1
+    condition: round_1_required_fields_present
+  - from: scoring_feedback_round_1
+    to: practice_rewrite_round_2
+    condition: retry_required
+  - from: practice_rewrite_round_2
+    to: transfer_check
+    condition: round_2_scored
+  - from: transfer_check
+    to: upgrade_judgment
+    condition: transfer_check_completed
+    optional: true
+    event_driven: true
+  - from: transfer_check
+    to: completion
+    condition: transfer_check_completed_and_no_upgrade_signal
+  - from: upgrade_judgment
+    to: completion
+    condition: upgrade_judgment_completed
+  cognition_spec:
+    purpose: |
+      认知层 / Mental Model.
+      Foundational, required reading presented BEFORE the experience modules.
+      Answers three questions in plain language:
+      (1) what a prompt is (任务规格书, not a spell),
+      (2) why the prompt itself is the biggest, cheapest lever on output quality,
+      (3) why the same task yields different results for different people
+          (AI is a probabilistic gap-filling engine; vague specs -> its own assumptions -> divergent output).
+      This frame lets the learner correctly interpret Module 0-2.
+    locale_file: locales/zh-CN/cognition.md
+    estimated_time_minutes: 1
+    scored: false
+    required: true
+    skip_condition: learner_opts_to_skip_cognition
+    pass_condition: cognition_completed == true OR cognition_minimal_recap_shown ==
+      true
+    scaffold_note: |
+      该模块不评分。若学员选择跳过，必须展示一段 ≤180 字的最小回顾，
+      覆盖「提示词=任务定义 / 提示词是最大控制杆 / 同样任务结果不同源于规格清晰度」三点，
+      再进入 Module 0。
+  myth_detect_spec:
+    purpose: |
+      Module 0 — Prompt Myth Detector.
+      Interactive: learner pastes ANY Prompt → system annotates which parts are
+      "Prompt Metaphysics" and why they cannot stably improve output.
+      Replaces the old fixed-quiz myth_diagnosis with a learner-driven input format.
+    module_file: modules/module0_myth_detector.en.yaml
+    locale_file: locales/zh-CN/myth_detector.md
+    estimated_time_minutes: 5
+    scored: false
+    optional: true
+    skip_condition: learner_declines_myth_detect
+    pass_condition: myth_detect_completed == true OR learner_declines_myth_detect
+      == true
+    scaffold_note: |
+      该模块不计入总分。检测结果为后续改写练习提供个性化反馈。
+      系统将根据 myth_detect_result 中的命中类型，在 Round 1 反馈中
+      指出用户是否在改写中重复了已被识别的玄学模式。
+  xray_scan_spec:
+    purpose: |
+      Module 1 — Prompt X-Ray.
+      Scanner produces an Execution Readiness Score (0-100) across 5 dimensions.
+      Recommended (optional) for beginners; can be skipped.
+    module_file: modules/module1_xray.en.yaml
+    locale_file: locales/zh-CN/xray.md
+    estimated_time_minutes: 3
+    scored: false
+    optional: true
+    skip_condition: learner_declines_xray
+    pass_condition: xray_scan_completed == true OR learner_declines_xray == true
+  crash_test_spec:
+    purpose: |
+      Module 2 — Prompt Crash Test.
+      3-scenario stress test: missing info, scale change, target change.
+      Output PASS/FAIL per scenario with root-cause attribution.
+      Recommended (optional) for beginners; can be skipped.
+    module_file: modules/module2_crash_test.en.yaml
+    locale_file: locales/zh-CN/crash_test.md
+    estimated_time_minutes: 3
+    scored: false
+    optional: true
+    skip_condition: learner_declines_crash_test
+    pass_condition: crash_test_completed == true OR learner_declines_crash_test ==
+      true
+  upgrade_judgment_spec:
+    purpose: |
+      Module 3 — Prompt → Workflow Judgment.
+      Triggered when the learner's task hits any of 4 boundary signals:
+      multi_step / external_data / state_persistence / multi_role.
+      Shows the evolution chain (Prompt → Workflow → Skill → Agent)
+      and routes to the appropriate next course.
+      Event-driven; only activates when a signal fires.
+    module_file: modules/module3_upgrade_judgment.en.yaml
+    locale_file: locales/zh-CN/upgrade_judgment.md
+    estimated_time_minutes: 2
+    scored: false
+    optional: true
+    event_driven: true
+    trigger_signals:
+    - multi_step
+    - external_data
+    - state_persistence
+    - multi_role
+    pass_condition: upgrade_judgment_completed == true OR no_upgrade_signal_detected
+      == true
+  guided_diagnosis_spec:
+    purpose: 让学员在正式改写前，先对一个"半成品 Prompt"做诊断，建立对五个槽位的感知。
+    task_zh: |
+      在给出诊断题目之前，先向学员展示以下任务类型列表（必须完整展示，不得省略）：
+
+      【可选任务类型】
+      - 抽取型：从已有材料里找出特定信息
+      - 对比型：把多个对象放在同一维度下比较
+      - 评估型：按照标准对某个对象打分或判断
+      - 生成型：从零创建一个新内容或文档
+      - 改写型：在保留核心意思的基础上改变表达
+      - 多步骤型：需要按顺序完成多个子任务
+
+      展示后，给出诊断题并要求学员：
+      1. 从上面 6 种类型里选出主任务类型（可以加一个次类型）
+      2. 指出这个需求还缺少哪几件事（至少 3 项，用自己的话说）
+    pass_condition: identified_task_type == true AND missing_items_count >= 3
+    scaffold_note: 这一步没有标准答案，目的是让你建立感觉，不评分。
+  gating_rules:
+    round_1_required_fields:
+    - task_type_selection
+    - missing_information_list
+    - rewritten_prompt
+    round_2_required_fields:
+    - revised_task_type_selection
+    - revised_missing_information_list
+    - final_rewritten_prompt
+    - revision_note
+    save_requires:
+    - final_score_after_retry >= 75
+    - retry_completed == true
+    - transfer_check_completed == true
+    - required_components_present == true
+    - no_high_severity_failure_patterns == true
+    transfer_pass_requires:
+    - task_type_selection_is_plausible == true
+    - transfer_task_type_differs_from_primary == true
+    - missing_information_count >= 4

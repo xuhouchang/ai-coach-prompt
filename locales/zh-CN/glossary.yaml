@@ -1,0 +1,31 @@
+---
+locale: zh-CN
+terms:
+  task_clarity: 任务目标清晰
+  input_definition: 输入材料明确
+  context_completion: 背景与使用场景完整
+  output_contract: 输出约定明确
+  acceptance_criteria: 验收标准明确
+  prompt_executability: Prompt 可执行性
+  workflow_readiness: 工作流准备度
+  failure_pattern: 错误模式
+  retry_rule: 重做规则
+  asset_capture: 资产沉淀
+  task_type_diagnosis: 任务类型判断
+  missing_information_diagnosis: 缺失信息识别
+  extraction_task: 信息提取任务
+  comparison_task: 对比分析任务
+  evaluation_task: 评估判断任务
+  generation_task: 内容生成任务
+  rewriting_task: 改写优化任务
+  multistep_task: 多步骤任务
+  transformation_task: 改写型任务
+  multi_stage_task: 多阶段任务
+  task_type: 任务类型
+  dominant_task_type: 主任务类型
+  secondary_task_type: 次任务类型
+  missing_information: 缺失信息
+  prompt_template: Prompt 模板
+  source_material: 输入材料
+  output_format: 输出格式
+  business_use_case: 业务用途

@@ -1,0 +1,74 @@
+---
+save_spec:
+  asset_type: prompt_template
+  completion_policy: current_framework
+  asset_id_rule: prompt_template_[task_type]_[timestamp]
+  asset_title_rule: Executable Task Prompt Template — [Task Type]
+  asset_title_rule_zh: 可执行任务 Prompt 模板 — [任务类型]
+  save_condition:
+  - final_score_after_retry >= 75
+  - retry_completed == true
+  - transfer_check_completed == true
+  - required_components_present == true
+  - no_high_severity_failure_patterns == true
+  required_components_present:
+    evaluator: rubric_model
+    method: component_presence_plus_min_dimension_score
+    component_threshold_ratio: 0.6
+    threshold_formula: dimension_min_score = dimension_weight * component_threshold_ratio
+    required_components:
+    - task
+    - input
+    - context
+    - output
+    - acceptance
+    pass_logic:
+    - task_clarity_score >= task_clarity.weight * 0.60
+    - input_definition_score >= input_definition.weight * 0.60
+    - context_completion_score >= context_completion.weight * 0.60
+    - output_contract_score >= output_contract.weight * 0.60
+    - acceptance_criteria_score >= acceptance_criteria.weight * 0.60
+    - prompt_executability_score >= prompt_executability.weight * 0.60
+    current_weight_examples_for_v0_4:
+      task_clarity_min: 7.2
+      input_definition_min: 7.8
+      context_completion_min: 7.8
+      output_contract_min: 9.0
+      acceptance_criteria_min: 10.2
+      prompt_executability_min: 6.0
+    high_severity_blockers:
+    - missing_task_object
+    - missing_source_material
+    - missing_task_specific_variables
+  component_detection_schema:
+    task:
+      present: boolean
+      evidence: string
+    input:
+      present: boolean
+      evidence: string
+    context:
+      present: boolean
+      evidence: string
+    output:
+      present: boolean
+      evidence: string
+    acceptance:
+      present: boolean
+      evidence: string
+  asset_template:
+    template_name: Executable Task Prompt Template
+    template_name_zh: 可执行任务 Prompt 模板
+    canonical_template_body: |
+      Ask WorkBuddy to [task_action] based on [source_material].
+      The result is for [audience/use_case].
+      Focus on [scope/dimensions/criteria] and exclude [boundaries].
+      Output the result as [format/structure/length].
+      The result is usable if [acceptance_criteria].
+    localized_template_body_zh: |
+      请 WorkBuddy 基于【输入材料】完成【任务动作】。
+      这份结果将用于【使用场景/读者对象】。
+      请重点覆盖【分析范围/关键维度/判断标准】，排除【不需要的内容】。
+      请按照【输出格式/结构/长度】呈现。
+      结果需要满足【验收标准】。
+    usage_note_zh: 这个模板适用于把模糊业务需求改成可执行 AI 任务。下次遇到「帮我分析」「帮我写」「帮我整理」「帮我评估」「帮我改一下」这类需求时，先判断任务类型，再补齐括号里的变量。

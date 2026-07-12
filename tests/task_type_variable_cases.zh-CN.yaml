@@ -1,0 +1,94 @@
+task_type_variable_cases:
+  - id: variables_generation_client_followup_01
+    scenario_id: generation_client_followup
+    vague_request_zh: 帮我写一封客户跟进邮件。
+    expected_primary_task_type: generation_task
+    expected_missing_information:
+      - recipient_context
+      - meeting_summary
+      - followup_goal
+      - tone
+      - output_format
+      - acceptance_criteria
+    min_missing_count_for_pass: 4
+    wrong_type_examples:
+      - extraction_task
+      - comparison_task
+
+  - id: variables_extraction_meeting_notes_01
+    scenario_id: extraction_meeting_notes
+    vague_request_zh: 帮我整理一下会议纪要。
+    expected_primary_task_type: extraction_task
+    expected_missing_information:
+      - source_material
+      - extraction_fields
+      - output_structure
+      - owner_deadline_fields
+      - accuracy_boundary
+    min_missing_count_for_pass: 4
+    wrong_type_examples:
+      - generation_task
+      - evaluation_task
+
+  - id: variables_comparison_competitor_analysis_01
+    scenario_id: comparison_competitor_analysis
+    vague_request_zh: 帮我写一份竞品分析。
+    expected_primary_task_type: comparison_task
+    expected_secondary_task_types_allowed:
+      - evaluation_task
+      - generation_task
+    expected_missing_information:
+      - competitor_objects
+      - source_material
+      - comparison_dimensions
+      - audience_or_use_case
+      - output_format
+      - acceptance_criteria
+    min_missing_count_for_pass: 5
+
+  - id: variables_transformation_sales_copy_01
+    scenario_id: transformation_sales_copy
+    vague_request_zh: 帮我把这段技术介绍改得更适合客户看。
+    expected_primary_task_type: rewriting_task
+    alias_allowed:
+      - transformation_task
+    expected_missing_information:
+      - source_content
+      - target_audience
+      - transformation_goal
+      - preserve_rules
+      - remove_or_change_rules
+      - output_format
+    min_missing_count_for_pass: 5
+
+  - id: variables_evaluation_sales_proposal_01
+    scenario_id: evaluation_sales_proposal
+    vague_request_zh: 帮我看看这个方案行不行。
+    expected_primary_task_type: evaluation_task
+    expected_missing_information:
+      - evaluation_object
+      - evaluation_criteria
+      - target_customer_context
+      - risk_boundary
+      - scoring_or_priority_rule
+      - recommendation_format
+    min_missing_count_for_pass: 5
+
+  - id: variables_multistage_market_research_01
+    scenario_id: multi_stage_market_research
+    vague_request_zh: 帮我调研一下这个市场，然后给我一个建议。
+    expected_primary_task_type: multistep_task
+    alias_allowed:
+      - multi_stage_task
+    expected_secondary_task_types_allowed:
+      - extraction_task
+      - comparison_task
+      - evaluation_task
+    expected_missing_information:
+      - research_scope
+      - source_material_or_source_strategy
+      - analysis_steps
+      - evaluation_criteria
+      - intermediate_outputs
+      - final_decision_format
+    min_missing_count_for_pass: 5

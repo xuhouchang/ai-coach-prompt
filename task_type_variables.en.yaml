@@ -1,0 +1,66 @@
+---
+task_type_variables:
+- task_type: generation_task
+  expected_missing_information:
+  - recipient_context
+  - meeting_summary
+  - followup_goal
+  - tone
+  - output_format
+  - acceptance_criteria
+  min_missing_count_for_pass: 4
+- task_type: extraction_task
+  expected_missing_information:
+  - source_material
+  - extraction_fields
+  - output_structure
+  - owner_deadline_fields
+  - accuracy_boundary
+  min_missing_count_for_pass: 4
+- task_type: comparison_task
+  expected_missing_information:
+  - competitor_objects
+  - source_material
+  - comparison_dimensions
+  - audience_or_use_case
+  - output_format
+  - acceptance_criteria
+  min_missing_count_for_pass: 5
+  secondary_task_types_allowed:
+  - evaluation_task
+  - generation_task
+- task_type: rewriting_task
+  alias_allowed:
+  - transformation_task
+  expected_missing_information:
+  - source_content
+  - target_audience
+  - transformation_goal
+  - preserve_rules
+  - remove_or_change_rules
+  - output_format
+  min_missing_count_for_pass: 5
+- task_type: evaluation_task
+  expected_missing_information:
+  - evaluation_object
+  - evaluation_criteria
+  - target_customer_context
+  - risk_boundary
+  - scoring_or_priority_rule
+  - recommendation_format
+  min_missing_count_for_pass: 5
+- task_type: multistep_task
+  alias_allowed:
+  - multi_stage_task
+  expected_missing_information:
+  - research_scope
+  - source_material_or_source_strategy
+  - analysis_steps
+  - evaluation_criteria
+  - intermediate_outputs
+  - final_decision_format
+  min_missing_count_for_pass: 5
+  secondary_task_types_allowed:
+  - extraction_task
+  - comparison_task
+  - evaluation_task

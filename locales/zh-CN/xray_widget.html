@@ -1,0 +1,49 @@
+<!-- Prompt X-Ray 战术 HUD 模板。Agent 在 xray_scan 状态渲染前替换下方占位符。
+  安全要求：{{PROMPT}} 必须先按 HTML 文本转义，再替换，不能作为 HTML 注入。
+  {{PROMPT}}      学员粘贴的 Prompt 文本
+  {{D1_DOT}}..{{D5_DOT}}  该维度状态颜色：完整 #3B6D11 / 部分 #BA7517 / 缺失 #A32D2D
+  {{D1_LABEL}}..{{D5_LABEL}}  维度名 + 状态，如 "任务清晰度 · 缺失"
+  {{SCORE}}      执行就绪分整数
+  {{TIER_COLOR}} 总分对应颜色：<60 #A32D2D / 60-89 #BA7517 / >=90 #3B6D11
+  {{TIER_LABEL}} 未充分定义 / 基本可执行 / 可执行
+  {{RING_OFFSET}} 环形仪表缺口 = 326.7 × (1 - 分数/100)，保留 1 位小数
+渲染方式：用 show_widget 工具输出本片段（不要包 DOCTYPE/html/body）。 -->
+<h2 class="sr-only">Prompt X-Ray 扫描结果：执行就绪分 {{SCORE}}/100，{{TIER_LABEL}}</h2>
+<style>
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.hud{max-width:640px;margin:0 auto;padding:1px;border-radius:18px;background:linear-gradient(135deg,rgba(97,215,255,.8),rgba(38,84,153,.18) 42%,rgba(87,140,255,.62));box-shadow:0 18px 42px rgba(9,26,61,.18);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+.hud-core{overflow:hidden;border-radius:17px;background:#071426;color:#eaf7ff}
+.hud-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(149,222,255,.18);font-size:11px;letter-spacing:.09em;color:#9edfff}
+.hud-live{display:flex;align-items:center;gap:7px;color:#d8f4ff}.hud-live:before{content:"";width:7px;height:7px;border-radius:50%;background:#56d5ff;box-shadow:0 0 12px #56d5ff}
+.hud-id{color:#6f91b8}.signal{position:relative;margin:14px 16px 8px;padding:14px 15px 15px;border:1px solid rgba(124,215,255,.22);border-radius:10px;background:linear-gradient(100deg,rgba(17,52,91,.88),rgba(7,20,38,.92));min-height:70px;line-height:1.62;font-size:13px;color:#eaf7ff;word-break:break-word}
+.signal:before{content:"INPUT SIGNAL";display:block;margin-bottom:6px;font-size:10px;letter-spacing:.12em;color:#79dfff}.sweep{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 0%,transparent 36%,rgba(105,224,255,.03) 42%,rgba(105,224,255,.48) 50%,rgba(105,224,255,.03) 58%,transparent 64%,transparent 100%);transform:translateX(-115%);animation:sweep .18s ease-out forwards}.rail{position:relative;margin:0 16px;padding:11px 0 3px}.rail:before{content:"";position:absolute;top:22px;left:7px;right:7px;height:1px;background:linear-gradient(90deg,rgba(91,214,255,.12),rgba(91,214,255,.72),rgba(91,214,255,.12));transform:scaleX(0);transform-origin:left;animation:trace .3s ease-out .18s forwards}.nodes{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.node{min-width:0;opacity:0;transform:translateY(7px);animation:lock .2s cubic-bezier(.2,.8,.2,1) forwards}.node:nth-child(1){animation-delay:.24s}.node:nth-child(2){animation-delay:.32s}.node:nth-child(3){animation-delay:.4s}.node:nth-child(4){animation-delay:.48s}.node:nth-child(5){animation-delay:.56s}.node-dot{display:block;width:14px;height:14px;margin:0 auto 7px;border:2px solid #071426;border-radius:50%;background:var(--signal);box-shadow:0 0 0 2px var(--signal),0 0 13px color-mix(in srgb,var(--signal) 66%,transparent)}.node-label{display:block;min-height:32px;text-align:center;font-size:10px;line-height:1.35;color:#b9d5eb;overflow-wrap:anywhere}.result{display:flex;align-items:center;gap:14px;margin:12px 16px 0;padding:13px 0;border-top:1px solid rgba(149,222,255,.16);opacity:0;transform:translateY(5px);animation:lock .25s ease-out .64s forwards}.dial{flex:0 0 auto;width:72px;height:72px}.dial circle:last-child{stroke-dasharray:326.7;stroke-dashoffset:326.7;animation:fill .24s cubic-bezier(.2,.8,.2,1) .64s forwards}.score-label{font-size:10px;letter-spacing:.11em;color:#86b5d4}.score{margin:3px 0;font-size:29px;font-weight:700;line-height:1;color:#f4fbff}.score span{font-size:12px;font-weight:500;color:#8eb5ce}.tier{font-size:12px;font-weight:700}.hud details{margin:12px 16px 16px;border-top:1px solid rgba(149,222,255,.16);font-family:inherit}.hud summary{padding-top:11px;cursor:pointer;color:#9edfff;font-size:12px;list-style:none}.hud summary::-webkit-details-marker{display:none}.hud summary:before{content:"+";display:inline-block;width:16px;color:#63dbff}.hud details[open] summary:before{content:"−"}.hud-guide{margin:8px 0 0;padding:10px 12px;border-left:2px solid #5bdcff;background:rgba(75,174,255,.08);font-size:12px;line-height:1.6;color:#c8e5f5}.hud-guide strong{color:#f3fbff}
+@keyframes sweep{to{transform:translateX(115%)}}@keyframes trace{to{transform:scaleX(1)}}@keyframes lock{to{opacity:1;transform:translateY(0)}}@keyframes fill{to{stroke-dashoffset:{{RING_OFFSET}}}}
+@media (max-width:480px){.hud-top{padding:11px 13px}.hud-id{display:none}.signal,.rail,.result,.hud details{margin-left:13px;margin-right:13px}.nodes{gap:2px}.node-label{font-size:9px}.result{gap:11px}}
+@media (prefers-reduced-motion:reduce){.sweep,.rail:before,.node,.result,.dial circle:last-child{animation:none!important}.sweep{display:none}.rail:before{transform:scaleX(1)}.node,.result{opacity:1;transform:none}.dial circle:last-child{stroke-dashoffset:{{RING_OFFSET}}}}
+</style>
+<section class="hud" aria-label="Prompt X-Ray 战术扫描报告">
+  <div class="hud-core">
+    <div class="hud-top"><span class="hud-live">SCAN COMPLETE</span><span class="hud-id">XRAY / SPEC-05</span></div>
+    <div class="signal"><span>{{PROMPT}}</span><i class="sweep" aria-hidden="true"></i></div>
+    <div class="rail" aria-label="五个任务规格维度的扫描状态">
+      <div class="nodes">
+        <div class="node" style="--signal:{{D1_DOT}}"><i class="node-dot" aria-hidden="true"></i><span class="node-label">{{D1_LABEL}}</span></div>
+        <div class="node" style="--signal:{{D2_DOT}}"><i class="node-dot" aria-hidden="true"></i><span class="node-label">{{D2_LABEL}}</span></div>
+        <div class="node" style="--signal:{{D3_DOT}}"><i class="node-dot" aria-hidden="true"></i><span class="node-label">{{D3_LABEL}}</span></div>
+        <div class="node" style="--signal:{{D4_DOT}}"><i class="node-dot" aria-hidden="true"></i><span class="node-label">{{D4_LABEL}}</span></div>
+        <div class="node" style="--signal:{{D5_DOT}}"><i class="node-dot" aria-hidden="true"></i><span class="node-label">{{D5_LABEL}}</span></div>
+      </div>
+    </div>
+    <div class="result">
+      <svg class="dial" viewBox="0 0 120 120" role="img" aria-label="执行就绪分 {{SCORE}} 分，{{TIER_LABEL}}">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(142,204,235,.18)" stroke-width="10"/>
+        <circle cx="60" cy="60" r="52" fill="none" stroke="{{TIER_COLOR}}" stroke-width="10" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+      </svg>
+      <div><div class="score-label">EXECUTION READINESS</div><div class="score">{{SCORE}}<span>/100</span></div><div class="tier" style="color:{{TIER_COLOR}}">{{TIER_LABEL}}</div></div>
+    </div>
+    <details>
+      <summary>查看可补齐项</summary>
+      <div class="hud-guide">优先处理上方标记为<strong>“缺失”</strong>或<strong>“部分”</strong>的维度；每补齐一项，就少让 AI 猜一次。扫描完成后即可继续改写，不需要等待额外加载。</div>
+    </details>
+  </div>
+</section>

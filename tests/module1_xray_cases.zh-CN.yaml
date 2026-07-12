@@ -1,0 +1,112 @@
+---
+test_suite: module1_xray_cases
+description: |
+  Test cases for Module 1 — Prompt X-Ray.
+  Validates 5-dimension status classification, score formula regression,
+  and tier boundary correctness.
+canonical_language: en
+primary_locale: zh-CN
+test_cases:
+  - id: xray_001
+    description: 全维度完整 → 满分 100
+    input_prompt: |
+      请基于「上周的销售数据表」（见附件），对比「三个销售区域（华东、华南、华北）」在「销售额、客单价、转化率」三个维度上的表现差异。
+      这份报告用于「区域经理周会」，受众是「大区总监」。
+      请用「表格」呈现，三区域各一行，三指标各一列，表格下附 3 条结论。
+      结果需要「能直接复制进会议 PPT，不需要额外加工」。
+    expected_dimensions:
+      task_clarity: complete
+      input_definition: complete
+      context_completion: complete
+      output_contract: complete
+      acceptance_criteria: complete
+    expected_score_range: [90, 100]
+    expected_tier: executable
+
+  - id: xray_002
+    description: 全部缺失 → 最低分
+    input_prompt: "帮我看看这个。"
+    expected_dimensions:
+      task_clarity: missing
+      input_definition: missing
+      context_completion: missing
+      output_contract: missing
+      acceptance_criteria: missing
+    expected_score_range: [0, 10]
+    expected_tier: needs_definition
+
+  - id: xray_003
+    description: 任务有但其他全缺 → 中间分
+    input_prompt: "帮我分析一下竞争对手。"
+    expected_dimensions:
+      task_clarity: partial
+      input_definition: missing
+      context_completion: missing
+      output_contract: missing
+      acceptance_criteria: missing
+    expected_score_range: [0, 20]
+    expected_tier: needs_definition
+
+  - id: xray_004
+    description: 有任务和输入但缺输出标准 → 中等偏低
+    input_prompt: "请基于这份会议记录，提取所有行动项。"
+    expected_dimensions:
+      task_clarity: complete
+      input_definition: partial
+      context_completion: missing
+      output_contract: missing
+      acceptance_criteria: missing
+    expected_score_range: [15, 40]
+    expected_tier: needs_definition
+
+  - id: xray_005
+    description: 接近可执行但有验收缺口 → 60-89
+    input_prompt: |
+      请基于这三份简历，对比候选人在技术能力和项目经验上的差异，
+      结果用于招聘决策。请用表格呈现。
+    expected_dimensions:
+      task_clarity: complete
+      input_definition: complete
+      context_completion: complete
+      output_contract: complete
+      acceptance_criteria: partial
+    expected_score_range: [75, 95]
+    expected_tier: partially_executable
+
+  - id: xray_006
+    description: 模糊质量词作为验收标准 → partial 而非 complete
+    input_prompt: "请写一封好的跟进邮件。要做到专业、有说服力、打动客户。"
+    expected_dimensions:
+      task_clarity: partial
+      input_definition: missing
+      context_completion: partial
+      output_contract: missing
+      acceptance_criteria: partial
+    # "专业、有说服力、打动客户" 是模糊质量词，不应被判定为 complete
+
+  - id: xray_007
+    description: 有任务、输入、上下文、输出但缺验收 → 应该 partial 而非 missing
+    input_prompt: |
+      请基于这份合同草案，评估其中的法律风险。
+      结果用于法务部门审核。请按风险高/中/低分类，列出每个风险点的条款编号和建议修改方案。
+    expected_dimensions:
+      task_clarity: complete
+      input_definition: complete
+      context_completion: complete
+      output_contract: complete
+      acceptance_criteria: missing
+    expected_score_range: [70, 85]
+
+  - id: xray_008
+    description: Score 计算公式回归——满分 100 验证
+    input_prompt: |
+      基于这份数据表，统计各部门的季度营收。
+      结果用于 CFO 季度报告。请输出为三列表格（部门/营收/增长率）。
+      数据必须可追溯到原始表格中的行号。
+    expected_score: 100
+    expected_dimensions:
+      task_clarity: complete
+      input_definition: complete
+      context_completion: complete
+      output_contract: complete
+      acceptance_criteria: complete

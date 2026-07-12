@@ -1,0 +1,54 @@
+retry_cases:
+  - id: retry_repair_01
+    round_1_total_score: 52
+    detected_failure_patterns:
+      - missing_source_material
+      - missing_task_specific_variables
+      - missing_acceptance_criteria
+    expected_retry_mode: repair_retry
+    expected_max_focus_items:
+      beginner: 2
+      standard: 2
+      advanced: 3
+    expected_required_round_2_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list
+      - final_rewritten_prompt
+      - revision_note
+    expected_focus_priority:
+      - missing_source_material
+      - missing_task_specific_variables
+  - id: retry_targeted_improvement_01
+    round_1_total_score: 82
+    detected_failure_patterns:
+      - missing_acceptance_criteria
+    expected_retry_mode: targeted_improvement
+    expected_instruction_contains_zh:
+      - 修复系统指出的 1-2 个关键缺口
+      - 让 WorkBuddy 少猜一步
+    expected_required_round_2_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list
+      - final_rewritten_prompt
+      - revision_note
+  - id: retry_template_optimization_01
+    round_1_total_score: 94
+    detected_failure_patterns: []
+    expected_retry_mode: template_optimization
+    expected_instruction_contains_zh:
+      - 第二轮不是修错
+      - 压缩成更稳定、可复用的 Prompt 模板
+    expected_required_round_2_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list
+      - final_rewritten_prompt
+      - revision_note
+  - id: retry_incomplete_submission_01
+    round_1_total_score: 78
+    round_2_submission_fields:
+      - final_rewritten_prompt
+      - revision_note
+    expected_behavior: ask_for_missing_round_2_fields_before_scoring
+    missing_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list

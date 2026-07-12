@@ -1,0 +1,56 @@
+cognition_cases:
+  - id: cognition_required_01
+    state: cognition
+    learner_route: standard
+    input_context:
+      entry_answers:
+        q1: 偶尔写
+        q2: 用过一点
+    expected_output:
+      must_contain_core_claim: 提示词 = 任务定义
+      must_answer_three_questions:
+        - what_is_prompt
+        - why_prompt_matters
+        - why_same_task_differs
+      must_contain_mechanism: 按概率补全
+      max_chinese_chars: 800
+      purpose: establish_mental_model_before_modules
+      next_state: myth_detect
+    forbidden:
+      - long_article_style
+      - arrow_flowchart_for_core_slots
+      - external_skill_reference
+    notes: 认知层必须是短、准、先于体验模块的阅读；不得变成又一篇长教材。
+  - id: cognition_beginner_detailed_01
+    state: cognition
+    learner_route: beginner
+    input_context:
+      entry_answers:
+        q1: 从来没有
+        q2: 没用过
+    expected_output:
+      must_contain_core_claim: 提示词 = 任务定义
+      must_answer_three_questions:
+        - what_is_prompt
+        - why_prompt_matters
+        - why_same_task_differs
+      max_chinese_chars: 800
+      next_state: myth_detect
+    forbidden:
+      - more_than_one_full_business_case
+  - id: cognition_skip_request_01
+    state: cognition
+    learner_route: standard
+    user_message: 这些我都知道，直接开始吧。
+    expected_behavior:
+      allow_skip: true
+      must_show_minimal_recap: true
+      minimal_recap_must_cover:
+        - 提示词是任务规格书
+        - 提示词是最大控制杆
+        - 同样任务结果不同源于规格清晰度
+      minimal_recap_max_chinese_chars: 180
+      next_state: myth_detect
+    forbidden:
+      - force_full_reading
+      - start_module_without_recap

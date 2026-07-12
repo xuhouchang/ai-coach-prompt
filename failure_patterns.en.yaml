@@ -1,0 +1,149 @@
+---
+failure_patterns:
+- code: F01
+  id: wrong_task_type
+  label_zh: 任务类型判断错误
+  severity: medium
+  applies_to:
+  - all
+  trigger: The user classifies the task by surface wording rather than underlying
+    task structure.
+  feedback_zh: 你的任务类型判断偏表层。判断任务类型时不要只看「写」「整理」「看看」这些动词，要看 AI 实际要完成的工作结构。
+  repair_action_zh: 第二轮先写出主任务类型和判断理由，再改写 Prompt。
+- code: F02
+  id: missing_task_object
+  label_zh: 任务对象缺失
+  severity: high
+  applies_to:
+  - comparison_task
+  - evaluation_task
+  - rewriting_task
+  - extraction_task
+  trigger: The prompt does not specify what object, content, competitor, proposal,
+    or material should be processed.
+  feedback_zh: 你没有说明具体处理对象，WorkBuddy 很难知道要分析、评估、改写或抽取什么。
+  repair_action_zh: 补充具体对象，例如竞品名称、方案草稿、会议记录、原文或客户资料。
+- code: F03
+  id: missing_source_material
+  label_zh: 输入材料缺失
+  severity: high
+  applies_to:
+  - all
+  trigger: The prompt does not specify source material or information basis.
+  feedback_zh: 你没有说明 AI 基于什么资料工作，这会让 WorkBuddy 依赖泛化知识或自行假设事实。
+  repair_action_zh: 补充输入材料，例如文档、网页、表格、会议记录、客户访谈、竞品页面或内部资料。
+- code: F04
+  id: missing_task_specific_variables
+  label_zh: 任务关键变量缺失
+  severity: high
+  applies_to:
+  - all
+  trigger: The prompt lacks variables required by its task type, such as fields for
+    extraction, dimensions for comparison, criteria for evaluation, or preserve rules
+    for rewriting.
+  feedback_zh: 你没有补齐这个任务类型最关键的变量。不同任务类型缺的东西不同，不能只补一段背景。
+  repair_action_zh: 根据任务类型补齐变量：抽取型补字段，对比型补维度，评估型补标准，生成型补受众和目标，改写型补保留/删改规则。
+- code: F05
+  id: missing_audience_or_use_case
+  label_zh: 读者或业务用途缺失
+  severity: medium
+  applies_to:
+  - all
+  trigger: The prompt does not state who will use the output or what business action
+    it supports.
+  feedback_zh: 你没有说明结果给谁看、用于什么场景，WorkBuddy 很难判断表达深度和结论口径。
+  repair_action_zh: 补充使用场景，如产品评审、销售跟进、老板决策、客户沟通或内部复盘。
+- code: F06
+  id: missing_output_contract
+  label_zh: 输出约定缺失
+  severity: medium
+  applies_to:
+  - all
+  trigger: The prompt lacks format, structure, length, or deliverable type.
+  feedback_zh: 你没有定义输出形式，WorkBuddy 不知道该给表格、报告、清单、邮件还是评分表。
+  repair_action_zh: 指定输出格式，如「一页报告」「表格 + 3 条结论」「不超过 800 字」「评分表」。
+- code: F07
+  id: missing_acceptance_criteria
+  label_zh: 验收标准缺失
+  severity: medium
+  applies_to:
+  - all
+  trigger: The prompt does not define what makes the result usable.
+  feedback_zh: 你没有说明什么结果算可用，所以 WorkBuddy 无法对输出质量做收敛。
+  repair_action_zh: 补充验收标准，如「能直接用于周一产品评审会讨论」或「能直接复制发送给客户」。
+- code: F08
+  id: overexpanded_without_structure
+  label_zh: 只是扩写，没有结构
+  severity: medium
+  applies_to:
+  - all
+  trigger: The user writes a longer prompt but does not organize task, input, context,
+    output, and acceptance.
+  feedback_zh: 你的 Prompt 变长了，但结构没有更清楚。长 Prompt 不等于可执行 Prompt。
+  repair_action_zh: 按任务、输入、背景、输出、验收五段重新组织。
+- code: F09
+  id: conflicting_instructions
+  label_zh: 指令互相冲突
+  severity: high
+  applies_to:
+  - all
+  trigger: The prompt contains mutually conflicting constraints on tone, length, scope,
+    or required actions.
+  feedback_zh: 你的 Prompt 里有互相打架的要求，AI 无法同时满足它们，所以结果会不稳定。
+  repair_action_zh: 删除或合并冲突要求，只保留一套清晰且能同时成立的约束。
+- code: F10
+  id: ritual_prompt_used
+  label_zh: 仪式型提示词
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt uses breathing or vague thinking rituals instead of a concrete
+    task procedure.
+  feedback_zh: "“深呼吸”或“认真思考”没有补充任务事实，不能稳定提升结果。"
+  repair_action_zh: 改成可检查的任务步骤、分析范围或输出顺序。
+- code: F11
+  id: empty_role_prompt_used
+  label_zh: 空泛专家角色
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt assigns an undefined expert role without audience, business
+    context, or output criteria.
+  feedback_zh: "“资深专家”没有说明结果给谁用，也没有定义交付标准。"
+  repair_action_zh: 补充受众、业务场景和结果必须覆盖的内容。
+- code: F12
+  id: magic_quality_words_used
+  label_zh: 万能质量词堆砌
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt stacks generic quality words in place of measurable constraints.
+  feedback_zh: "“全面、深入、专业”不是验收标准，AI 无法据此判断边界。"
+  repair_action_zh: 改成具体维度、字数、结构和可用标准。
+- code: F13
+  id: fake_logic_framework_used
+  label_zh: 未落地的逻辑框架
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt names a framework without defining how it should be applied.
+  feedback_zh: 只写“第一性原理”或“苏格拉底法”不会自动形成可执行步骤。
+  repair_action_zh: 写出框架要执行的具体动作、输入和输出。
+- code: F14
+  id: importance_emphasis_used
+  label_zh: 重要性强调
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt emphasizes importance without defining a usable acceptance criterion.
+  feedback_zh: "“这很重要”没有告诉 AI 什么样的结果才算好。"
+  repair_action_zh: 改成可验证的业务用途或验收标准。
+- code: F15
+  id: bribery_prompt_used
+  label_zh: 利诱型提示词
+  severity: low
+  applies_to:
+  - all
+  trigger: The prompt offers a tip, reward, or praise instead of task constraints.
+  feedback_zh: 小费和好评不会给 AI 增加任务信息。
+  repair_action_zh: 用输出结构、范围和验收条件替代利诱表达。
