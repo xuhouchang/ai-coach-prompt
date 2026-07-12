@@ -103,26 +103,6 @@ AI Coach Prompt 会带用户完成一条循序渐进的 Prompt 学习路径：
 
 > 请从这个 GitHub 仓库获取完整的 AI Coach Prompt Skill。不要只读取 README 或 SKILL.md；请保留仓库根目录下的全部 Skill 文件，并按你当前宿主平台的 Skill 安装方式导入。安装完成后，以 SKILL.md 作为入口启动一次教学流程。
 
-### 腾讯 WorkBuddy
-
-对于腾讯 WorkBuddy，Agent 应下载或克隆完整 Skill 文件夹，并通过包内的 `workbuddy_install_manifest.yaml` 作为安装契约导入。
-
-推荐做法是把**完整文件夹**提供给 WorkBuddy，而不是逐个上传 YAML 或 Markdown 文件。支持 GitHub 读取的 Agent 可以先拉取仓库，再执行 WorkBuddy 的导入动作。
-
-### Trae
-
-Trae 中可将完整目录复制到项目的：
-
-```text
-.trae/skills/ai-coach-prompt/
-```
-
-也可以放入 Trae 配置的全局 Skills 目录。关键是 `SKILL.md` 必须位于该 Skill 的根目录。
-
-### Coze（扣子）
-
-Coze 需要上传或打包完整 Skill 目录，并保持 `SKILL.md` 位于根目录。GitHub 链接可以让 Agent 获取源文件，但 Agent 仍需将完整目录导入 Coze；不能只把链接当作 Coze Skill 的运行入口。
-
 ### 其他支持 SKILL.md 的 Agent 或宿主
 
 只要 Agent 能访问 GitHub、下载目录并安装本地 Skill，就可以把本仓库链接作为安装来源。没有可视化组件时，Skill 会以 Markdown/纯文本方式继续教学流程。
