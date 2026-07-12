@@ -10,7 +10,7 @@ entry_check:
     - 经常写
   - id: q2
     type: single_choice
-    question_zh: 你是否用过 WorkBuddy 做真实任务？
+    question_zh: 你是否用过 AI 助手完成真实任务？
     options_zh:
     - 没用过
     - 用过一点
@@ -19,43 +19,59 @@ entry_check:
     type: multi_choice
     question_zh: 下面这句话缺少哪些关键信息？「帮我写一份竞品分析。」
     options_zh:
-    - 竞品对象
-    - 输入材料
-    - 分析维度
-    - 业务用途
-    - 输出格式
-    - 验收标准
+    - 分析对象与范围
+    - 可用输入材料
+    - 需要比较的维度与用途
+    - 交付格式与验收标准
   - id: q4
     type: single_choice
-    question_zh: 你主要在哪个行业或领域工作？
+    question_zh: 你主要属于哪个行业大类？
     options_zh:
-    - 互联网/软件
-    - 电商/零售
-    - 金融/保险
-    - 制造/供应链
-    - 教育/培训
-    - 医疗/健康
-    - 媒体/内容
-    - 其他
+    - 数字产品与互联网
+    - 商业与金融
+    - 实体产业与专业服务
+    - 内容及其他
+    follow_up_by_option:
+      数字产品与互联网:
+        resolved_industry: 互联网/软件
+      商业与金融:
+        id: q4_detail_business_finance
+        type: single_choice
+        question_zh: 请选择更贴近你的行业：
+        options_zh:
+        - 电商/零售
+        - 金融/保险
+      实体产业与专业服务:
+        id: q4_detail_industry_service
+        type: single_choice
+        question_zh: 请选择更贴近你的行业：
+        options_zh:
+        - 制造/供应链
+        - 教育/培训
+        - 医疗/健康
+      内容及其他:
+        id: q4_detail_content_other
+        type: single_choice
+        question_zh: 请选择更贴近你的行业：
+        options_zh:
+        - 媒体/内容
+        - 其他
   - id: q5
     type: single_choice
     question_zh: 你日常用 AI 工具最常做哪类事？
     options_zh:
-    - 写文案/内容
-    - 做数据分析
-    - 写代码
-    - 客户沟通
-    - 做方案/报告
+    - 内容创作与客户沟通
+    - 数据分析与方案报告
+    - 编程与技术任务
     - 其他
   - id: q6
     type: multi_choice
     question_zh: 你最想通过训练提升哪方面？
     options_zh:
-    - 把模糊需求写清楚
-    - 让 AI 输出更稳定
-    - 减少返工
-    - 适配我的业务场景
-    - 学会复用模板
+    - 把需求说清楚
+    - 让输出更稳定、减少返工
+    - 贴近我的业务场景
+    - 做成可复用模板
   - id: q7
     type: single_choice
     question_zh: 练习场景你更偏好哪种？
@@ -67,14 +83,14 @@ entry_check:
     beginner_if:
     - q1 == '从来没有'
     - q2 == '没用过'
-    - selected_count(q3) <= 3
+    - selected_count(q3) <= 2
     standard_if:
     - q1 == '偶尔写'
-    - selected_count(q3) >= 4
+    - selected_count(q3) >= 3
     advanced_if:
     - q1 == '经常写'
     - q2 == '经常用'
-    - selected_count(q3) >= 5
+    - selected_count(q3) >= 4
     conflict_resolution:
     - when_self_report_and_tool_experience_conflict_use_q3_as_tie_breaker
     - if_no_rule_matches_fallback_to_standard

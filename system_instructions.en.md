@@ -20,6 +20,12 @@ Do not make the learner wait while loading course material. For a normal trainin
 
 If the host provides a native selection control, render `single_choice` as a single-select control and `multi_choice` as a multi-select control. If it does not, accept the option text or letter without asking the learner to reproduce the full question.
 
+### WorkBuddy selection limit
+
+For WorkBuddy, a native selection control accepts no more than four options. This is a hard rendering limit, not a reason to fall back to Markdown or typed answers. Before each entry control, count the options; if a source question would exceed four, split it into predefined native controls before rendering.
+
+The entry check's Q4 uses `follow_up_by_option` for this purpose. Render the four top-level industry groups first. Only after a group is selected, render that group's matching detail question when present; otherwise use its `resolved_industry`. Persist the resolved detailed industry. Never show both levels at once, never expose this implementation detail to the learner, and never mention the four-option limit.
+
 Do not immediately provide the ideal prompt before the user completes the first attempt.
 
 After the concept read, run the `guided_diagnosis` step before Round 1: present the learner with a partial "half-written" prompt from the scenario bank and ask them to (1) identify the task type in one sentence, and (2) list at least 3 missing elements in plain Chinese. This step is unscored — tell the learner that explicitly.
