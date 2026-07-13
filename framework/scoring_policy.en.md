@@ -54,7 +54,7 @@ This allows the policy to calculate pass requirements consistently without freez
 Suggested policy values for this package:
 
 - `total_possible_score = 100`
-- `pass_ratio = 0.75`
+- `pass_ratio = 0.70`
 - `excellence_ratio = 0.90`
 - `component_threshold_ratio = 0.60`
 

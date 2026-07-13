@@ -1,4 +1,20 @@
 concept_reading_cases:
+  - id: read_profile_never_skips_course_map_01
+    state: entry_check_completed
+    learner_route: standard
+    input_context:
+      profile_exists: true
+      profile:
+        prior_sessions: 3
+        level: advanced
+    expected_behavior:
+      profile_does_not_skip_reading: true
+      course_map_before_round_1: true
+      guided_diagnosis_before_round_1: true
+      next_state: course_map
+    forbidden:
+      - resume_directly_to_round_1
+      - resume_directly_to_round_2
   - id: read_beginner_detailed_01
     state: concept_read
     learner_route: beginner

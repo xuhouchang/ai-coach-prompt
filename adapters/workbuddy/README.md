@@ -2,7 +2,7 @@
 
 Build the installable package with `ruby scripts/build_workbuddy_installable.rb`.
 
-The generated package adds `workbuddy_install_manifest.yaml` for WorkBuddy installation. The portable core remains unchanged: WorkBuddy-only widgets are optional and the learner flow must remain usable as plain Markdown.
+The generated package adds `workbuddy_install_manifest.yaml` for WorkBuddy installation. Before practice, select the first supported course-map renderer: `course_map_widget.html` through WorkBuddy's HTML/widget mechanism, then `course_map_mermaid.md` when Mermaid is rendered, then `course_map.md` as the Markdown diagram fallback. Do not skip directly to prose just because one richer renderer is unavailable.
 
 ## Native entry controls
 

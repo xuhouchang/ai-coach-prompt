@@ -13,19 +13,20 @@ onboarding:
     - name: last_scenario_industry
     - name: updated_at
     persistence:
-      path: ".workbuddy/memory/learner_profile.yaml"
-      rule: 首次完成 entry_check 后写入；每次训练后更新 level / prior_sessions / last_scenario_industry。
+      workbuddy_path: ".workbuddy/learning/profile/learner_profile.yaml"
+      cross_host_rule: 首次完成 entry_check 后，仅写入当前宿主已明确提供的 profile/session 存储；每次训练后更新
+        level / prior_sessions / last_scenario_industry。没有已授权持久化能力时，仅保留在当前会话。
   personalization:
     greeting_order:
-    - 若 workspace .workbuddy/memory/learner_profile.yaml 存在：用 name 打招呼，引用 prior_sessions
-      与上次行业/level，说明本次将基于过往继续。
-    - 否则若云端 profile 提供姓名/角色：用其打招呼（若可用）。
+    - 若当前宿主已提供学员 profile：用 name 打招呼，引用 prior_sessions 与上次行业/level；但不得据此跳过课程全图、阅读或诊断。
+    - 否则若宿主 profile 提供姓名/角色：用其打招呼（若可用）。
     - 说明学→练→迁移旅程：先诊断模糊需求，再改写成可执行 Prompt，最后做一次迁移检查。
     - 若 q7 == 贴近我的行业场景 或 industry 已知：告知会优先选用该行业的练习场景。
     memory_sources:
-    - 云端 profile（长期事实）
-    - 本地 user memory（~/.workbuddy/MEMORY.md 与 USER.md）
-    - 学员档案（workspace .workbuddy/memory/learner_profile.yaml）
+    - 当前宿主明确暴露的 profile（长期事实）
+    - 当前宿主明确暴露的 memory/session store
+    - WorkBuddy 学员档案（workspace .workbuddy/learning/profile/learner_profile.yaml，仅在
+      WorkBuddy）
     guardrails:
     - 不编造用户未提供的行业/业务事实。
     - 行业未知时用通用场景，不强行假设。

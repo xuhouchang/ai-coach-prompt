@@ -1,6 +1,6 @@
 ---
 package_id: workbuddy.ai-coach-prompt
-package_version: 0.8
+package_version: 1.1
 install_mode: standalone_skill
 entrypoint: SKILL.md
 canonical_language: en
@@ -24,6 +24,9 @@ includes:
 - system_instructions.en.md
 - scenario_bank.en.yaml
 - locales/zh-CN/read.md
+- locales/zh-CN/course_map.md
+- locales/zh-CN/course_map_mermaid.md
+- locales/zh-CN/course_map_widget.html
 - locales/zh-CN/exercise.yaml
 - locales/zh-CN/feedback_templates.md
 - locales/zh-CN/glossary.yaml

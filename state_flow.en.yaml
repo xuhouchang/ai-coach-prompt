@@ -42,7 +42,8 @@ state_flow:
     condition: xray_crash_skipped
   - from: guided_diagnosis
     to: practice_rewrite_round_1
-    condition: guided_diagnosis_completed
+    condition: course_map_rendered AND cognition_completed_or_minimal_recap_shown
+      AND concept_read_completed_or_skipped_with_minimal_recap AND guided_diagnosis_completed
   - from: practice_rewrite_round_1
     to: scoring_feedback_round_1
     condition: round_1_required_fields_present
@@ -89,7 +90,7 @@ state_flow:
       Module 0 — Prompt Myth Detector.
       Interactive: learner pastes ANY Prompt → system annotates which parts are
       "Prompt Metaphysics" and why they cannot stably improve output.
-      Replaces the old fixed-quiz myth_detect with a learner-driven input format.
+      Replaces the old fixed-quiz myth_diagnosis with a learner-driven input format.
     module_file: modules/module0_myth_detector.en.yaml
     locale_file: locales/zh-CN/myth_detector.md
     estimated_time_minutes: 5
@@ -168,6 +169,15 @@ state_flow:
     pass_condition: identified_task_type == true AND missing_items_count >= 3
     scaffold_note: 这一步没有标准答案，目的是让你建立感觉，不评分。
   gating_rules:
+    normal_session_start:
+      profile_is_personalization_only: true
+      profile_must_not_restore_learning_state: true
+      required_sequence_before_round_1:
+      - course_map
+      - cognition
+      - concept_read
+      - guided_diagnosis
+      explicit_read_skip_requires_minimal_recap: true
     round_1_required_fields:
     - task_type_selection
     - missing_information_list

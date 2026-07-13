@@ -24,6 +24,27 @@ rendering_policy:
     allowed_rendering:
     - text_steps
     - flowchart
+  course_map:
+    required_before_practice: true
+    capability_priority:
+    - html_widget
+    - mermaid_diagram
+    - markdown_unicode_diagram
+    html_widget:
+      asset: locales/zh-CN/course_map_widget.html
+      required_host_capability: safe_html_or_widget_renderer
+    mermaid_diagram:
+      asset: locales/zh-CN/course_map_mermaid.md
+      required_host_capability: mermaid_renderer
+    markdown_unicode_diagram:
+      asset: locales/zh-CN/course_map.md
+      required_host_capability: none
+    supported_hosts:
+    - workbuddy
+    - codex
+    - trae
+    - coze
+    note_zh: 所有宿主都按当前会话能力选择图卡；HTML 可用时优先 HTML，不能假设任何宿主一定支持 HTML 或 Mermaid。
   concept_read:
     max_full_business_examples: 1
     forbid_long_article_style: true

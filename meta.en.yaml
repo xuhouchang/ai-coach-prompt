@@ -7,7 +7,7 @@ skill_display_name_zh: AI_coach_prompt
 module_id: module_prompt
 module_name: Prompt Training
 level: L1
-version: 0.8
+version: 1.1
 status: implemented
 canonical_language: en
 primary_locale: zh-CN
@@ -82,6 +82,9 @@ pass_rule:
 localized_assets:
 - locales/zh-CN/cognition.md
 - locales/zh-CN/read.md
+- locales/zh-CN/course_map.md
+- locales/zh-CN/course_map_mermaid.md
+- locales/zh-CN/course_map_widget.html
 - locales/zh-CN/exercise.yaml
 - locales/zh-CN/feedback_templates.md
 - locales/zh-CN/glossary.yaml

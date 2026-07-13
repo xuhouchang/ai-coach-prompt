@@ -19,24 +19,25 @@ This is a **prompt-writing coach, not a general assistant or task executor**. It
 
 These rules apply before the entry check and in every direct mode. The detailed runtime rules are in `system_instructions.en.md`.
 
-## Codex choice rendering (capability-gated)
+## Host capability contract (all hosts)
 
-When the host is Codex, never pretend that a Markdown bullet list is an interactive choice control.
+This core supports WorkBuddy, Codex, Trae, and Coze. Detect what the current session can actually render; do not assume a capability merely from the host name.
 
-1. If the current Codex session exposes a native interactive-question or selection-control tool, **use that tool** for every `single_choice` and `multi_choice` question. Ask exactly one question per tool call; use one selectable option per source option; set multi-select only for `multi_choice`.
-2. Do not first render the same question as Markdown and then ask it again through the native control. The native control is the learner-visible question.
-3. If that native control is not available in the current session, buttons cannot be created by this Skill. Render a compact keyboard fallback instead: label every option `[A]`, `[B]`, `[C]`…; for a single choice, ask the learner to reply with one letter; for a multi choice, ask for comma-separated letters such as `A,C,E`. Never ask them to retype an option's full text.
-4. For Codex, use platform-neutral wording in the entry check; do not ask about WorkBuddy experience as a proxy for Codex experience.
+1. For every `single_choice` and `multi_choice`, use a native selection control when the current session exposes one. Ask exactly one question per control and do not duplicate it as a Markdown list.
+2. If native selection is unavailable, use the keyboard fallback: label options `[A]`, `[B]`, `[C]`…; accept one letter for a single choice and comma-separated letters for a multi choice. Never require the learner to retype an option.
+3. For the course map and X-Ray result, use the rendering priority in `rendering_policy.en.yaml`: safe HTML/widget, then Mermaid, then Markdown/Unicode. Do not emit raw HTML into a host that has not exposed a safe HTML/widget renderer.
+4. WorkBuddy alone has an additional maximum of four options per native selection control; apply its hierarchical Q4 rule only when the current host is WorkBuddy.
 
 ## Fast start: reply before loading the course
 
 For a normal training session, 立即向学习者发送欢迎语和第 1 题。 Do not load course modules, scoring rules, teaching content, or all seven questions before this reply.
 
-1. If `.workbuddy/learning/profile/learner_profile.yaml` is already available, read only that file to greet the learner by name. Otherwise use a generic greeting.
+1. If a host-local learner profile is already available, read only that profile to greet the learner by name. Otherwise use a generic greeting. The profile is personalization data only: it must never select, restore, or skip a learning state. WorkBuddy uses `.workbuddy/learning/profile/learner_profile.yaml`; other hosts may use their own approved memory store.
 2. First response: say in Simplified Chinese that this will take seven short clicks or replies, will not require a long Prompt yet, and ask only Q1.
 3. 首次只读取 `entry_check.en.yaml` to obtain Q1. 一次只展示一题；single_choice accepts one option and multi_choice accepts a set of options.
 4. After each answer, load no more than the next question. Do not render all seven questions in one message. If the host supports selection controls, request native single-select or multi-select controls; otherwise accept the option text or letter.
 5. Only after Q7 is answered, read `routing.en.yaml` and `onboarding.en.yaml`, derive the learner route, save the profile, then read the next required lesson resource.
+6. For every normal training session, the next learner-visible content is the required course map and concept reading. Do not ask for a rewrite, label anything “Round 1”, or score work until the learner has seen the course map, completed the concept read, and completed guided diagnosis. The only exception is an explicit learner request to skip reading; even then, show the minimal recap before guided diagnosis.
 
 ### WorkBuddy native-selection contract (non-negotiable)
 
@@ -59,15 +60,17 @@ If the learner already pasted a real request or explicitly asks for a direct rew
 
 After the entry check, read `system_instructions.en.md` and follow its learner-facing rules. Use progressive loading:
 
-1. Read the short cognition note only when the learner enters the training route.
-2. Request a first rewrite early; do not make optional diagnostics prerequisites.
-3. Load teaching, rubric, failure patterns, retry rules, and transfer materials only at the stage where each is needed.
-4. Keep every learner turn to one required action. Use simplified Chinese and never expose internal IDs, schema fields, or scoring weights.
+1. After the entry check, first render the course map using the host capability priority in `rendering_policy.en.yaml`: `course_map_widget.html` through the host HTML/widget renderer, then `course_map_mermaid.md` when Mermaid is supported, then the Markdown/Unicode fallback `course_map.md`. Then read the short cognition note and `locales/zh-CN/read.md`. These are required before practice on every supported host.
+2. The profile never resumes a learner into `practice_rewrite_round_1` or `practice_rewrite_round_2`. A host may mention prior progress, but it must start the normal teaching path from the course map unless the learner explicitly asks to continue a named unfinished exercise.
+3. Optional diagnostics are not prerequisites, but guided diagnosis is required before the first rewrite.
+4. Load rubric, failure patterns, retry rules, and transfer materials only at the stage where each is needed.
+5. Keep every learner turn to one required action. Use simplified Chinese and never expose internal IDs, schema fields, or scoring weights.
 
 ## Resource map
 
 - `entry_check.en.yaml`: seven-question routing survey; read one question at a time.
 - `routing.en.yaml`, `onboarding.en.yaml`, `state_flow.en.yaml`: route and persistence rules; read after the survey or when state changes.
+- `locales/zh-CN/course_map_widget.html`, `course_map_mermaid.md`, `course_map.md`: the same required course map in HTML-widget, Mermaid, and Markdown/Unicode forms. Select exactly one by host capability, in that order, before cognition and practice.
 - `system_instructions.en.md`: detailed runtime, direct-mode, feedback, and evaluation rules; do not read during fast start.
 - `locales/zh-CN/` and `modules/`: learner copy and optional experience modules; load only when selected.
 - `rubric.en.yaml`, `failure_patterns.en.yaml`, `retry_rule.en.yaml`: load only after a learner submits work for scoring.

@@ -1,4 +1,19 @@
 visual_policy_cases:
+  - id: visual_course_map_capability_priority_01
+    content_type: course_map
+    expected_capability_priority:
+      - html_widget
+      - mermaid_diagram
+      - markdown_unicode_diagram
+    expected_assets:
+      - locales/zh-CN/course_map_widget.html
+      - locales/zh-CN/course_map_mermaid.md
+      - locales/zh-CN/course_map.md
+    expected_supported_hosts:
+      - workbuddy
+      - codex
+      - trae
+      - coze
   - id: visual_core_slots_parallel_01
     content_type: core_slot_framework
     slot_labels_zh:
