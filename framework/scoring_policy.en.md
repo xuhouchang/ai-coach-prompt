@@ -54,11 +54,15 @@ This allows the policy to calculate pass requirements consistently without freez
 Suggested policy values for this package:
 
 - `total_possible_score = 100`
-- `pass_ratio = 0.70`
+- `pass_ratio = 0.75`
 - `excellence_ratio = 0.90`
 - `component_threshold_ratio = 0.60`
 
 These values can be tuned at the module or deployment layer without changing the skill logic.
+
+> **Deployment override (current package):** the deployed thresholds are
+> `pass_line = 75` and `excellence_line = 90` (see `retry_rule.en.yaml` and
+> `save_spec.en.yaml`). If you change these, update all three files together.
 
 ## Round 2 Evaluation
 

@@ -121,7 +121,7 @@ state_flow_cases:
           结果需要支持创始团队判断是否投入 2 周做进一步验证。
           修改说明：补充了输入材料范围、评分口径和最终业务决策用途。
         expected_final_score_range: 92-100
-  - id: flow_beginner_with_myth_diagnosis_01
+  - id: flow_beginner_with_myth_detect_01
     description: 初学者完成玄学诊断后进入正式训练。
     entry_answers:
       q1: 从来没有
@@ -131,11 +131,11 @@ state_flow_cases:
     expected_route: beginner
     primary_scenario_id: generation_client_followup
     steps:
-      - state: myth_diagnosis
+      - state: myth_detect
         user_answer_zh: |
           第一步：B、D是不可执行的。A有具体任务，C有目标和输出格式。坏Prompt中，“资深商业顾问”是空泛角色，“深吸一口气”是仪式词，“第一性原理”是假框架，“全面深入”是万能词。
           第二步：替换完成。改写：“请分析这个项目的优劣势。输出格式为Markdown表格。最后给出是否值得投资的结论。”
-        expected_myth_diagnosis_result:
+        expected_myth_detect_result:
           recognizes_ritual_prompt: true
           recognizes_empty_role_prompt: true
           recognizes_generic_quality_words: true

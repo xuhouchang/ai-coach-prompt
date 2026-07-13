@@ -43,6 +43,16 @@ retry_cases:
       - revised_missing_information_list
       - final_rewritten_prompt
       - revision_note
+  - id: retry_high_severity_override_01
+    round_1_total_score: 95
+    detected_failure_patterns:
+      - conflicting_instructions
+    expected_retry_mode: repair_retry
+    expected_required_round_2_fields:
+      - revised_task_type_selection
+      - revised_missing_information_list
+      - final_rewritten_prompt
+      - revision_note
   - id: retry_incomplete_submission_01
     round_1_total_score: 78
     round_2_submission_fields:

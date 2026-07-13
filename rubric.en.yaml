@@ -124,6 +124,10 @@ review_rubric:
     - focus_repairs
     - replacement_skeleton
     - next_action
+    next_action_guidance_zh: |
+      根据当前 retry_mode 给出下一步：optional_template_optimization → 建议模板化优化或进入迁移练习；
+      targeted_improvement / repair_retry → 明确指出下一版要修复的具体项；
+      可完成时 → 进入迁移练习或结束。措辞须与 retry_rule 的 retry_mode 一致。
     internal_evaluation:
     - total_score
     - dimension_scores
@@ -183,7 +187,8 @@ review_rubric:
       total_score_formula: sum(weighted_dimension_scores)
     final_score_after_retry:
       source: round_2.total_score_or_round_1.total_score
-      rule: Use Round 2 when the learner chooses a retry; otherwise use the usable Round 1 score.
+      rule: Use Round 2 when the learner chooses a retry; otherwise use the usable
+        Round 1 score.
     score_delta:
       formula: round_2.total_score - round_1.total_score
       display_to_user: false

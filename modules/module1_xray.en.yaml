@@ -192,9 +192,9 @@ scoring:
       meaning_zh: 这个 Prompt 定义的任务，AI 几乎不需要猜测就能执行。
     - range: [60, 89]
       label: Partially Executable
-      label_zh: 基本可执行
-      meaning: The task is mostly defined but has gaps the AI will fill with guesses.
-      meaning_zh: 任务大部分已定义，但有缺口，AI 会用猜测填补。
+      label_zh: 有缺口，需补槽位
+      meaning: The task is mostly defined but has gaps the AI will fill with guesses. This readiness score is separate from the final scored rubric; a score below 75 still triggers a required retry.
+      meaning_zh: 任务大部分已定义，但有缺口，AI 会用猜测填补。注意：这是“执行就绪”诊断分，与正式评分不是同一把尺——正式评分低于 75 即需重做。
     - range: [0, 59]
       label: Needs Definition
       label_zh: 未充分定义

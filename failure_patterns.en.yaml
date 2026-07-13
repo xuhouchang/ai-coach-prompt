@@ -84,7 +84,7 @@ failure_patterns:
   trigger: The user writes a longer prompt but does not organize task, input, context,
     output, and acceptance.
   feedback_zh: 你的 Prompt 变长了，但结构没有更清楚。长 Prompt 不等于可执行 Prompt。
-  repair_action_zh: 按任务、输入、背景、输出、验收五段重新组织。
+  repair_action_zh: 按任务、输入、使用场景（给谁看）、输出、验收五段重新组织。
 - code: F09
   id: conflicting_instructions
   label_zh: 指令互相冲突

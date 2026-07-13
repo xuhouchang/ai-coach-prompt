@@ -89,7 +89,7 @@ state_flow:
       Module 0 — Prompt Myth Detector.
       Interactive: learner pastes ANY Prompt → system annotates which parts are
       "Prompt Metaphysics" and why they cannot stably improve output.
-      Replaces the old fixed-quiz myth_diagnosis with a learner-driven input format.
+      Replaces the old fixed-quiz myth_detect with a learner-driven input format.
     module_file: modules/module0_myth_detector.en.yaml
     locale_file: locales/zh-CN/myth_detector.md
     estimated_time_minutes: 5

@@ -101,6 +101,28 @@ myth_catalog:
     replacement_slot: task_clarity
     replacement_example_zh: |
       把“用第一性原理”改为具体步骤：先列出 3 个底层假设，再逐一用材料验证，最后说明哪个假设不成立。
+  - id: quality_padding
+    name_zh: 万能质量词堆砌型
+    maps_to_failure_pattern: F12
+    keywords:
+      - 全面
+      - 深入
+      - 高质量
+      - 专业
+      - 详尽
+      - 完美
+      - 顶尖
+      - comprehensive
+      - in-depth
+      - high quality
+      - professional
+    why_no_stable_improvement_zh: |
+      “全面、深入、专业”这类词没有任何可衡量的边界，AI 不知道做到什么程度算达标，
+      也不会因此输出更聚焦的结果——只是听起来更用力。
+    replacement_slot: acceptance_criteria
+    replacement_example_zh: |
+      删掉“全面、深入地分析”，改为验收标准：输出不超过 800 字，按“现状-风险-建议”三段，
+      每段给出 1 个可执行的下一步。
 
 # 交互流程
 interaction_spec:
@@ -114,10 +136,10 @@ interaction_spec:
     这些词读起来很专业，但它们没有告诉 AI 任何关于你任务的事实。
     真正的 Prompt 不是咒语，是规格书。
 
-# 在闭环中的使用（复用现有 myth_diagnosis 状态）
+# 在闭环中的使用（复用现有 myth_detect 状态）
 in_loop_usage:
-  state: myth_diagnosis
-  mandatory: true
+  state: myth_detect
+  mandatory: false
   output_flags:
     - recognizes_ritual_prompt
     - recognizes_empty_role_prompt

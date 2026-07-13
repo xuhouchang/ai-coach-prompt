@@ -13,11 +13,17 @@ retry_policy:
   - condition: total_score < 75
     retry_mode: repair_retry
     localized_instruction_zh: 你的第一版还需要 WorkBuddy 猜测关键变量。请先修复上面最关键的 1-2 处，再提交下一版。
+high_severity_override:
+  condition: any_high_severity_failure_pattern_present == true
+  retry_mode: repair_retry
+  overrides_score_rules: true
+  localized_instruction_zh: 你的第一版里有会直接影响执行的高危问题（如指令互相冲突、缺任务对象/输入/关键变量），请先修复，再提交下一版。
 retry_focus_selection:
   priority_order:
   - missing_source_material
   - missing_task_specific_variables
   - missing_task_object
+  - conflicting_instructions
   - missing_acceptance_criteria
   - missing_output_contract
   - missing_audience_or_use_case

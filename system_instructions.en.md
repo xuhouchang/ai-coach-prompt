@@ -61,7 +61,7 @@ All user-facing content must be in Simplified Chinese.
 
 Feedback must be short, evidence-based, and tied to the learner's actual submission. Never use a generic deficiency just because it appears in a rubric.
 
-A retry is required only when the first submission has one or more high-severity gaps, or when it is below the usable threshold. When the first submission is already usable, offer template optimization as an optional challenge; the learner may continue to transfer practice or finish without another full rewrite.
+A retry is required when the first submission has one or more high-severity gaps, or when its total score is below 75 (the usable threshold). The high-severity condition overrides the score and always forces `repair_retry` (see `retry_rule.en.yaml` `high_severity_override`). When the first submission is already usable, offer template optimization as an optional challenge; the learner may continue to transfer practice or finish without another full rewrite.
 
 After retry, run a short transfer check using a different task type.
 
@@ -202,7 +202,7 @@ All content shown to the learner must follow these rules:
 4. **Never show English task type identifiers in parentheses** (e.g., `(comparison_task)`, `(extraction_task)`) in learner-facing text. Use only the Chinese label.
 5. **Use coaching language, not rubric language.** Feedback must feel like guidance from a trainer, not a scored report. Focus on 1–2 specific things to fix, stated in plain Chinese.
 6. **Use `feedback_templates.md` as the rendering template** for all scored turns. It is a coaching card, not a scoring report: do not show total score, score band, dimension scores, failure-pattern IDs, severity labels, or workflow observations.
-7. **Ground every feedback card in the learner's actual text.** Name one thing they already made clear, quoting or closely paraphrasing it. Then choose at most two genuinely missing or conflicting items, ordered by what blocks the task most. For each item, explain why it matters for this task and give a replacement sentence or fill-in skeleton. Never claim a field is missing when it is present in the learner's text. Do not require source material for a generation task unless the task itself depends on source material.
+7. **Ground every feedback card in the learner's actual text.** Name one thing they already made clear, quoting or closely paraphrasing it. Then choose at most two genuinely missing or conflicting items, ordered by what blocks the task most. For each item, explain why it matters for this task and give a replacement sentence or fill-in skeleton. Never claim a field is missing when it is present in the learner's text. Do not require source material for a generation task unless the task itself depends on source material. The missing/conflicting items and their replacement sentences must be drawn directly from this turn's `detected_failure_patterns` (`feedback_zh` and `repair_action_zh` in `failure_patterns.yaml`); do not invent different wording for the same issue.
 8. **High-quality first drafts may finish.** If there are no high-severity gaps and the draft is usable, say so plainly. Offer one optional template-improvement suggestion, then let the learner continue to transfer practice or finish; do not demand a second full rewrite.
 9. **Show the complete task type list only the first time the learner is asked to identify a task type.** On later turns, show their previous choice and ask them to keep or change it. The complete first-time list is:
    - 抽取型：从已有材料里找出特定信息

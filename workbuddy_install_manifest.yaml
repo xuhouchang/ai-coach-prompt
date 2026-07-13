@@ -1,6 +1,6 @@
 ---
 package_id: workbuddy.ai-coach-prompt
-package_version: 0.6
+package_version: 0.8
 install_mode: standalone_skill
 entrypoint: SKILL.md
 canonical_language: en
@@ -39,6 +39,10 @@ includes:
 - locales/zh-CN/crash_test.md
 - locales/zh-CN/upgrade_judgment.md
 - locales/zh-CN/xray_widget.html
+- adapters/codex/README.md
+- adapters/coze/README.md
+- adapters/trae/README.md
+- adapters/workbuddy/README.md
 - tests/adaptive_cases.zh-CN.yaml
 - tests/agent_loop_cases.zh-CN.yaml
 - tests/cognition_cases.zh-CN.yaml
