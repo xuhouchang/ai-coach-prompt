@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .DS_Store
 /tmp/
+
+# 构建目录仅供本地生成 WorkBuddy 安装包；不纳入独立 Skill 源码仓库。
+dist/
