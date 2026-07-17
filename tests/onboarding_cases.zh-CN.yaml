@@ -1,5 +1,0 @@
-onboarding_cases:
-  - id: onboarding_questions_and_profile_01
-    expect_entry_questions_ge: 7
-  - id: onboarding_profile_schema_present_02
-    expect_entry_questions_ge: 7

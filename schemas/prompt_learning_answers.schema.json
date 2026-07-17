@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prompt type learning answers",
+  "type": "object",
+  "required": [
+    "task_type",
+    "answers"
+  ],
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "extraction_task",
+        "comparison_task",
+        "evaluation_task",
+        "generation_task",
+        "rewriting_task",
+        "multistep_task"
+      ]
+    },
+    "scenario_title": {
+      "type": "string"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

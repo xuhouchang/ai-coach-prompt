@@ -1,0 +1,84 @@
+---
+type_learning:
+  canonical_task_types_file: task_types.en.yaml
+  scenario_file: learning_scenarios.en.yaml
+  start_policy:
+    recommended_type_from_profile: true
+    allow_user_select_any_type: true
+    allow_own_scenario: true
+    allow_recommended_scenario: true
+  type_intro_page:
+    shows:
+    - type_definition
+    - common_examples
+    - node_count
+    - node_names
+    asks_zh: 你准备使用推荐练习场景，还是用自己的真实任务来完成这类 Prompt？
+    quick_replies_zh:
+    - 使用推荐场景
+    - 使用我的任务
+    - 不太明白这个类型
+    - 返回类型地图
+  node_loop:
+    page_generation_rule: 任务类型有 N 个节点，就必须顺序生成 N 个 node_step 页面。
+    page_id_pattern: node_step:{task_type}:{one_based_index}:{node_id}
+    one_node_per_page: true
+    node_order_source: task_types.en.yaml -> types.<task_type>.nodes
+    persist_answer_after_each_page: true
+    assemble_only_after_all_nodes_visited: true
+    skipped_node_placeholder_zh: 【待补充：{node_label}】
+  assembly:
+    template_source: task_types.en.yaml -> types.<task_type>.assembly_template_zh
+    script: scripts/assemble_prompt.py
+    show_on_separate_page: true
+    allow_user_edit_after_assembly: true
+  multi_type_learning:
+    track_completed_types: true
+    allow_repeat_completed_type: true
+    after_type_completion:
+    - continue_another_type
+    - go_to_final_test
+    - review_current_type
+    direct_command_examples_zh:
+    - 学习评估型
+    - 我想学改写型
+    - 换一个提示词类型
+    - 直接进入测试
+    interrupt_behavior: 保存当前类型与节点进度；切换后可从原节点恢复。
+  session_state:
+    fields:
+    - current_state
+    - completed_intro_pages
+    - recommended_types
+    - learned_task_types
+    - current_task_type
+    - current_node_index
+    - type_drafts
+    - suspended_learning_stack
+    - test_state
+    type_drafts_shape:
+      task_type: string
+      scenario_mode: recommended|own
+      scenario_context: string
+      answers: map[node_id,string]
+      skipped_nodes: list[node_id]
+  type_selector:
+    top_level_question_zh: 你想从哪一组开始？也可以直接输入具体类型名称。
+    top_level_options_zh:
+    - 使用推荐类型
+    - 内容创作类
+    - 分析判断类
+    - 信息与流程类
+    follow_up_by_group:
+      内容创作类:
+      - generation_task
+      - rewriting_task
+      分析判断类:
+      - comparison_task
+      - evaluation_task
+      信息与流程类:
+      - extraction_task
+      - multistep_task
+    recommended_behavior: 直接进入 recommended_types 中尚未完成的第一个类型；全部完成时询问复习或测试。
+    display_all_six_in_page_body: true
+    text_option_max_options: 4

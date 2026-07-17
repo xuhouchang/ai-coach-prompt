@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PromptAssessment",
+  "type": "object",
+  "required": ["original_prompt", "classification", "node_coverage", "radar_scores", "total_score", "score_band_zh", "priorities"],
+  "properties": {
+    "report_title_zh": {"type": "string"},
+    "original_prompt": {"type": "string"},
+    "classification": {
+      "type": "object",
+      "required": ["primary_type", "primary_type_zh", "confidence_zh", "rationale_zh"],
+      "properties": {
+        "primary_type": {"enum": ["extraction_task", "comparison_task", "evaluation_task", "generation_task", "rewriting_task", "multistep_task"]},
+        "primary_type_zh": {"type": "string"},
+        "secondary_type": {"type": ["string", "null"]},
+        "secondary_type_zh": {"type": ["string", "null"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence_zh": {"enum": ["高", "中", "低"]},
+        "rationale_zh": {"type": "string"}
+      }
+    },
+    "node_coverage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "label_zh", "status", "evidence_zh", "gap_zh"],
+        "properties": {
+          "node_id": {"type": "string"},
+          "label_zh": {"type": "string"},
+          "status": {"enum": ["complete", "partial", "missing"]},
+          "evidence_zh": {"type": "string"},
+          "gap_zh": {"type": "string"}
+        }
+      }
+    },
+    "radar_scores": {
+      "type": "object",
+      "required": ["task_goal", "input_evidence", "context_boundaries", "output_contract", "acceptance_stability"],
+      "additionalProperties": false,
+      "properties": {
+        "task_goal": {"type": "integer", "minimum": 0, "maximum": 100},
+        "input_evidence": {"type": "integer", "minimum": 0, "maximum": 100},
+        "context_boundaries": {"type": "integer", "minimum": 0, "maximum": 100},
+        "output_contract": {"type": "integer", "minimum": 0, "maximum": 100},
+        "acceptance_stability": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "total_score": {"type": "integer", "minimum": 0, "maximum": 100},
+    "score_band_zh": {"type": "string"},
+    "priorities": {"type": "array", "maxItems": 3, "items": {"oneOf": [{"type": "string"}, {"type": "object"}]}},
+    "previous_total_score": {"type": "integer", "minimum": 0, "maximum": 100},
+    "previous_radar_scores": {"type": "object"},
+    "revised_prompt": {"type": "string"}
+  }
+}

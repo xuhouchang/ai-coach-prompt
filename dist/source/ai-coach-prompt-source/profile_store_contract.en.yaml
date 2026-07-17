@@ -1,0 +1,37 @@
+---
+profile_store_contract:
+  server_name: ai-coach-profile
+  default_deny: true
+  tools:
+    course_resource_get:
+      input:
+        resource_name: allowlisted_relative_resource_name
+      guarantees:
+      - rejects_absolute_paths
+      - rejects_parent_traversal
+      - reads_packaged_course_resources_only
+    profile_get:
+      input: none
+      guarantees:
+      - model_cannot_select_profile_path
+      - model_cannot_select_learner_id
+      - returns_current_local_profile_only
+    profile_patch:
+      input:
+        operations: bounded_operation_list
+      permitted_operations:
+      - set_profile_field
+      - merge_learning_state
+      - append_learning_material
+      - append_type_draft
+      - append_assessment
+      - reset_course_progress
+      guarantees:
+      - validates_result_against_schema
+      - atomic_write
+      - no_arbitrary_path_parameter
+      - learning_material_is_inert_json_text
+      - persists_text_nonblocking_page_state_before_rendering
+  failure_mode:
+    broaden_permissions: false
+    fallback: in_session_state_and_recovery_capsule

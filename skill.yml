@@ -1,0 +1,38 @@
+name: ai-coach-prompt
+display_name: AI Prompt 教练
+version: 3.1.2
+author: Shanghai Zero One Engine Technology Co., Ltd.
+language: zh-CN
+description: 通过分页面基础认知、六类 Prompt 的 N 节点逐步学习和最终五维测试，帮助用户构建并评测 Prompt；测试材料不会触发业务执行。
+instructions_file: SKILL.md
+readme: README.md
+resources:
+- SKILL.md
+- system_instructions.en.md
+- task_types.en.yaml
+- type_learning.en.yaml
+- learning_scenarios.en.yaml
+- page_contract.en.yaml
+- assessment.en.yaml
+- rubric.en.yaml
+- state_flow.en.yaml
+- routing.en.yaml
+- entry_check.en.yaml
+- onboarding.en.yaml
+- rendering_policy.en.yaml
+- retry_rule.en.yaml
+- save_spec.en.yaml
+- failure_patterns.en.yaml
+- scenario_bank.en.yaml
+- framework/scoring_policy.en.md
+- locales/zh-CN/
+- schemas/
+- profile_store_contract.en.yaml
+keywords:
+- Prompt
+- 提示词
+- Prompt学习
+- 节点教学
+- Prompt评测
+- AI培训
+- 雷达评分

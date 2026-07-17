@@ -1,0 +1,63 @@
+---
+learning_scenarios:
+  extraction_task:
+    title_zh: 从会议转写稿提取行动项
+    starter_request_zh: 帮我整理一下会议纪要。
+    node_suggestions:
+      source_material: 我上传的会议转写稿，并保留原始时间戳
+      extraction_fields: 议题、结论、行动项、负责人、截止时间和待确认事项
+      inclusion_exclusion_rules: 只保留会议中明确表达的内容；推断项标记为“待确认”
+      output_contract: 先给 5 行以内摘要，再输出行动项 Markdown 表格，每条一行
+      verification_rules: 未提及写“未提及”；信息冲突时并列原文并标出时间戳
+  comparison_task:
+    title_zh: 比较两家供应商并支持定标
+    starter_request_zh: 帮我对比两家供应商。
+    node_suggestions:
+      decision_goal: 帮助采购团队选择一家供应商进入合同谈判
+      comparison_objects: A 供应商 7 月 12 日报价与 B 供应商 7 月 14 日报价
+      evidence_sources: 两份报价单、交期承诺、质检记录和近 12 个月履约数据
+      comparison_dimensions: 总成本、交期、质量稳定性、付款条件和售后响应
+      audience_use_case: 采购总监和工厂负责人，用于周五定标会
+      output_contract: 先给统一口径对照表，再给推荐结论、主要风险和待确认事项
+      acceptance_criteria: 每个结论可回溯到材料；资料不足时明确无法定标，不自行补数据
+  evaluation_task:
+    title_zh: 评估一份项目实施方案是否可立项
+    starter_request_zh: 帮我评估一下这个项目方案。
+    node_suggestions:
+      evaluation_object: 我上传的《客户成功系统实施方案 V3》及其报价与排期
+      evaluation_criteria: 需求覆盖、实施周期、总成本、技术风险和运维负担
+      evidence_sources: 方案正文、客户需求文档、报价清单和项目排期
+      context_risk_boundary: 用于内部立项；周期超过 12 周或关键接口未确认时列为高风险
+      scoring_decision_rule: 每项 0–5 分；总分不低于 20 且无红线项时建议推进
+      output_contract: 一句话结论、评分表、三项主要风险和待澄清问题
+  generation_task:
+    title_zh: 生成一封客户会后跟进邮件
+    starter_request_zh: 帮我写一封客户跟进邮件。
+    node_suggestions:
+      deliverable_goal: 写一封会后跟进邮件，推动客户确认下一次需求澄清会
+      source_context: 会议纪要、客户提出的三项痛点和双方确认的下一步
+      audience_use_case: 客户业务负责人，邮件在会后 24 小时内发送
+      content_scope: 覆盖会议结论与下一步；不承诺未确认的价格和交期
+      output_contract: 主题行加三段正文，300 字以内，专业、直接、不过度推销
+      acceptance_criteria: 无需二次改写即可发送，并包含一个明确、低压力的行动请求
+  rewriting_task:
+    title_zh: 把技术产品介绍改成采购能看懂的版本
+    starter_request_zh: 把这段产品介绍润色一下。
+    node_suggestions:
+      source_content: 我粘贴的 600 字技术产品介绍
+      transformation_goal: 让非技术采购在 30 秒内理解产品价值和适用场景
+      target_audience: 制造业客户的采购主管和业务负责人
+      preserve_rules: 保留三项核心能力、价格区间、数据口径和合规声明
+      change_rules: 删除内部术语，长句拆短，合并重复信息；不改变事实含义
+      output_contract: 先给 80 字简介，再给三个要点，总字数不超过 220 字
+  multistep_task:
+    title_zh: 完成市场调研并形成是否进入的建议
+    starter_request_zh: 帮我调研这个市场，然后给个建议。
+    node_suggestions:
+      final_goal: 形成一份新市场进入建议，供管理层决定是否启动 8 周 POC
+      inputs_sources: 近 24 个月行业报告、主要供应商官网、公开招投标信息和访谈记录
+      step_sequence: 收集来源 → 校验事实 → 归纳趋势 → 评估机会 → 形成建议
+      intermediate_outputs: 来源清单、事实表、洞察清单、机会评分表和报告草稿
+      context_boundaries: 只研究中国市场近 24 个月公开资料，不使用无出处数据
+      decision_acceptance_rules: 关键事实至少双源验证；机会评分达到 70 分才建议进入
+      final_output_contract: 一页执行摘要、证据表、机会评分、风险和 30 天行动计划
